@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Administration</title>
+    <link rel="stylesheet" href="../src/css/admin.css">
+    <link rel="stylesheet" href="../src/css/reports.css">
+</head>
+<body>
+    <div style="display: flex; flex-direction: column;">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav"> 
+            <div class="nav-title">Administration</div>
+            <div class="nav-welcome">WELCOME, ADMIN</div>
+            <div style="cursor: pointer;" onclick="window.location.href = './login.html'" class="nav-logout">LOG OUT</div>
+
+        </nav>
+
+        <!-- Secondary Navigation Bar -->
+        <nav class="secondary-nav">
+            Home
+        </nav>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Analytics Section -->
+            <div class="section-title" id="sidebar-analytics">Analytics</div>
+            <div class="table-link" onclick="window.location.href='./admin.html'">Dashboard</div>
+            <div class="table-link" onclick="getQueries()">Queries</div>
+            <div class="table-link" onclick="loadReport()">Reports</div>
+
+            <!-- Tables Section -->
+            <div class="section-title" id="sidebar-table">TABLES</div>
+            <div class="table-link" onclick="fetchAndRenderUsers()">Users</div>
+            <div class="table-link" onclick="fetchAndRenderDepartments()">Departments</div>
+            <div class="table-link" onclick="fetchAndRenderComplaintTypes()">Complaint Types</div>
+            <div class="table-link" onclick="fetchAndRenderComplaints()">Complaints</div>
+            
+        </div>
+    </div>
+
+    <!-- Main Body -->
+    <div id="main-content" class="main-content">
+        <div id="query"></div>
+        <div id="table-container">
+            
+          <div id="graph">
+            <h1>Dashboard</h1>
+            <div style="padding: 20px;">
+
+            <div class="chart-grid">
+                <div class="pie-chart-card">
+                  <div class="chart-title">Complaints by Status</div>
+                  <canvas id="statusPieChart"></canvas>
+                </div>
+                <div class="bar-chart-card">
+                  <div class="chart-title">Complaints by Department</div>
+                  <canvas id="departmentChart"></canvas>
+                </div>
+              </div>
+              
+              <div class="dashboard-second-row">
+                <!-- Column 1: Two small stat cards -->
+                <div class="mini-stats-column">
+                  <div class="mini-card" id="userCountCard">
+                    <div class="mini-title">Total Users</div>
+                    <div class="mini-value" id="userCount">--</div>
+                  </div>
+                  <div class="mini-card" id="complaintCountCard">
+                    <div class="mini-title">Total Complaints</div>
+                    <div class="mini-value" id="complaintCount">--</div>
+                  </div>
+                </div>
+                
+                <!-- Column 3: Top Complaint Types (Bar Chart) -->
+                <div class="chart-card">
+                  <div class="chart-title">Top Complaint Types</div>
+                  <canvas id="complaintStatusChart" width="400" height="200"></canvas>
+                </div>
+                <!-- Column 2: Complaints Over Time (Line Chart) -->
+                <div class="chart-card">
+                  <div class="chart-title">Complaints Over Time</div>
+                  <canvas id="complaintsOverTimeChart"></canvas>
+                </div>
+            </div>
+            </div>
+            
+            </div>
+        </div>
+        <div id="search-1"></div>
+            <div id="search-2"></div>
+            <div id="search-3"></div>
+            <div id="search-4"></div>
+    </div>
+
+    <script src="../src/js/admin.js"></script>
+    <script src="../src/js/users.js"></script>
+    <script src="../src/js/departments.js"></script>
+    <script src="../src/js/complaintTypes.js"></script>
+    <script src="../src/js/complaints.js"></script>
+    <script src="../src/js/queries.js"></script>
+    <script src="../src/js/reports.js"></script>
+    <script src="../src/js/analytics.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</body>
+</html>

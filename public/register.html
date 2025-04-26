@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <link rel="stylesheet" href="../src/css/register.css" />
+  <!-- Only include below line if register-specific CSS exists -->
+  <!-- <link rel="stylesheet" href="../css/register.css" /> -->
+</head>
+
+<body>
+  <!-- Register Box -->
+  <div class="container register-box" style="justify-self: center;">
+    <h2>Registration Form</h2>
+    <div class="form-body">
+      <!-- Name -->
+      <div class="form-group">
+        <label>Name</label>
+        <input id="nameInputInReg" onblur="validateName()" type="text" />
+        <div id="validNameInReg" class="validation-msg"></div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label>Phone no.</label>
+        <input id="phoneInputInReg" onblur="validatePhone()" type="text" />
+        <div id="validphoneInReg" class="validation-msg"></div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label>Email-id</label>
+        <input id="emailInputInReg" type="text" />
+        <div id="validEmailInReg" class="validation-msg"></div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label>Password</label>
+        <input id="passInputInReg" onblur="validatePassword()" type="password" />
+        <div id="validPassInReg" class="validation-msg"></div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input id="confirmPassInputInReg" onblur="validateConfirmPassword()" type="password" />
+        <div id="validComfPassInReg" class="validation-msg"></div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="form-buttons">
+        <button onclick="registerUser()">Register</button>
+        <a href="login.html"><button>Back to Login</button></a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../src/js/register.js"></script>
+</body>
+</html>

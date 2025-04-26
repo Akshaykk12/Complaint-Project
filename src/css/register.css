@@ -1,0 +1,113 @@
+/* === General Styles === */
+body {
+    background-color: #44B78B;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* === Container for Register Box === */
+  .container {
+    margin-top: 10vh;
+    height: auto;
+    width: 70vh;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3vh;
+    box-sizing: border-box;
+  }
+  
+  /* === Heading === */
+  h2 {
+    margin-bottom: 2vh;
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  /* === Form Body === */
+  .form-body {
+    width: 100%;
+  }
+  
+  /* === Input Groups === */
+  .form-group {
+    margin-bottom: 2vh;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.5vh;
+  }
+  
+  .form-group input {
+    height: 5vh;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.5vh;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* === Validation Message === */
+  .validation-msg {
+    font-size: 0.9rem;
+    margin-top: 0.3vh;
+    color: red;
+  }
+  
+  /* === Form Buttons === */
+  .form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2vh;
+  }
+  
+  button {
+    padding: 1vh 2vh;
+    font-size: 1rem;
+    background-color: #44B78B;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #369b6f;
+  }
+  
+  a button {
+    background-color: #ccc;
+    color: black;
+  }
+  
+  a button:hover {
+    background-color: #aaa;
+  }
+  
+  /* === Responsive for smaller screens === */
+  @media (max-width: 768px) {
+    .container {
+      width: 90%;
+      margin-top: 5vh;
+      padding: 2vh;
+    }
+  
+    h2 {
+      font-size: 1.5rem;
+    }
+  
+    button {
+      font-size: 0.9rem;
+      padding: 0.8vh 1.5vh;
+    }
+  }
+  

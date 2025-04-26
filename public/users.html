@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints</title>
+    <link rel="stylesheet" href="../src/css/users.css">
+</head>
+<body>
+    <div style="display: flex; flex-direction: column;">
+        <!-- Top Navigation Bar -->
+    <nav style="position: fixed; top: 0; left: 0; background-color: #44B78B; color: white; width: 100%; height: 8vh; display: flex; justify-content: space-between; align-items: center; z-index: 1000;"> 
+        <div style="margin: 3em; font-size:3vh; font-weight: bolder;">User</div>
+        <div style="margin: 3em; font-size: larger;" id="greet">WELCOME, USER</div>
+        
+        <div style="cursor: pointer;" onclick="window.location.href = './login.html'" class="nav-logout">LOG OUT</div>
+    </nav>
+
+    <!-- Secondary Navigation Bar -->
+    <nav style="position: fixed; top: 8vh; left: 0; background-color: #0C4B33; color: white; width: 100%; height: 4vh; display: flex; justify-content: start; align-items: center; padding-left: 6rem; z-index: 999;">
+        Home
+    </nav>
+
+    <!-- Sidebar -->
+    <div style="position: fixed; top: 12vh; left: 0; width: 25%; height: 88vh; margin-left: 1.5rem; border: 1px lightgray solid; background-color: white; z-index: 998;">
+        <div>
+            <!-- First Table -->
+            <div style="background-color: #44B78B; height: 2rem; text-align: center; justify-content: center; margin-top: 0.5em; padding-top: 1em; color: white;">
+                Actions
+            </div>
+            <div onclick="fileComplaint()" id="but" style="height: 2rem; display: flex; flex-direction: row; align-items: center; border-bottom: 1px solid lightgray; padding: 0.5em 0; cursor: pointer;" >
+                <div style="width: 210px; text-align: left; color: #44B78B; padding-left: 1em;" >File a Complaint</div>
+            </div>
+            <div  style="background-color: #44B78B; height: 2rem; text-align: center; justify-content: center; margin-top: 0.5em; padding-top: 1em; color: white;">
+                History
+            </div>
+            <div onclick="showComplaints()" id="but" style="height: 2rem; display: flex; flex-direction: row; align-items: center; border-bottom: 1px solid lightgray; padding: 0.5em 0; cursor: pointer;" >
+                <div style="width: 210px; text-align: left; color: #44B78B; padding-left: 1em;" >Complaint History</div>
+                  </div>
+                    
+                </div>
+                
+
+             </div>
+    </div>
+
+    <!-- Main Body -->
+    <div id="main-content" style="margin-left: 25%; margin-top: 12vh; background-color: white; overflow-y: auto; padding: 3rem;" >
+        <!-- <h1>Dashboard</h1> -->
+        <div style="display: flex; flex-wrap: wrap;">
+            <div id="main-container" style="width: 100%;" >
+              <h1>WELCOME BACK USER</h1>
+            </div>
+        </div>
+    </div>
+<!-- <script src="../src/js/users.js"></script> -->
+ <!-- <script>
+  sessionStorage.removeItem("lastPageVisited");
+  </script> -->
+
+<script src="../src/js/usersPage.js"></script>
+</body>
+</html>

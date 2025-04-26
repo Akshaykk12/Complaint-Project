@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | Credential</title>
+  <link rel="stylesheet" href="../src/css/login.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome Back</h2>
+    <div class="form-box">
+      <!-- Email -->
+      <div class="input-group">
+        <label for="emailInput">Email-id</label>
+        <input id="emailInput" type="text" onblur="validateEmailLogin()" />
+        <div id="validEmail" class="error-msg"></div>
+      </div>
+      <!-- Password -->
+      <div class="input-group">
+        <label for="passInput">Password</label>
+        <input id="passInput" type="password" />
+        <div id="validPass" class="error-msg"></div>
+      </div>
+      <!-- Buttons -->
+      <div class="btn-group">
+        <button onclick="loginUser()">Login</button>
+        <a href="register.html"><button>New Registration</button></a>
+      </div>
+    </div>
+  </div>
+  <script src="../src/js/login.js"></script>
+</body>
+</html>

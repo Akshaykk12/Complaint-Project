@@ -1,0 +1,507 @@
+{
+  "Users": [
+    {
+      "UserID": 1,
+      "Name": "Ritika Jain",
+      "Email": "ritika.jain@gmail.com",
+      "Phone": "9876543210",
+      "UserType": "Customer",
+      "Password": "password1",
+      "id": "a429"
+    },
+    {
+      "UserID": 2,
+      "Name": "Arjun Mehta",
+      "Email": "arjun.mehta@yahoo.com",
+      "Phone": "9988776655",
+      "UserType": "Customer",
+      "Password": "password2",
+      "id": "91db"
+    },
+    {
+      "UserID": 3,
+      "Name": "Sneha Reddy",
+      "Email": "sneha.reddy@outlook.com",
+      "Phone": "8899776655",
+      "UserType": "Customer",
+      "Password": "password3",
+      "id": "9d15"
+    },
+    {
+      "UserID": 4,
+      "Name": "Rahul Verma",
+      "Email": "rahulv123@gmail.com",
+      "Phone": "9988001122",
+      "UserType": "Customer",
+      "Password": "password4",
+      "id": "24c5"
+    },
+    {
+      "UserID": 5,
+      "Name": "Nisha Kapoor",
+      "Email": "nisha.kapoor@gmail.com",
+      "Phone": "9812345678",
+      "UserType": "Customer",
+      "Password": "password5",
+      "id": "9ad8"
+    },
+    {
+      "UserID": 7,
+      "Name": "Deepika Sharma",
+      "Email": "deepika.sharma@zmail.com",
+      "Phone": "9645678901",
+      "UserType": "Customer",
+      "Password": "password7",
+      "id": "2ea5"
+    },
+    {
+      "UserID": 8,
+      "Name": "Ravi Nair",
+      "Email": "ravinair22@gmail.com",
+      "Phone": "9871123456",
+      "UserType": "Admin",
+      "Password": "password8",
+      "id": "fb3f"
+    },
+    {
+      "UserID": 9,
+      "Name": "Ayesha Khan",
+      "Email": "ayesha.k@ymail.com",
+      "Phone": "9900112233",
+      "UserType": "Customer",
+      "Password": "password9",
+      "id": "14b6"
+    },
+    {
+      "id": "82d6",
+      "UserID": 11,
+      "Name": "Akshay Kudalkar",
+      "Email": "akshaykudalkar.12@gmail.com",
+      "Phone": "7028327664",
+      "UserType": "Customer",
+      "Password": "Akshaykk12!"
+    },
+    {
+      "id": "9097",
+      "UserID": 12,
+      "Name": "Pumang",
+      "Email": "pumang@gmail.com",
+      "Phone": 7028327889,
+      "UserType": "Customer",
+      "Password": "Pumang@123"
+    },
+    {
+      "UserID": 13,
+      "Name": "Meera Desai",
+      "Email": "meera.desai@gmail.com",
+      "Phone": "9823012345",
+      "UserType": "Customer",
+      "Password": "MeeraD@2023",
+      "id": "a7c2"
+    },
+    {
+      "UserID": 14,
+      "Name": "Kabir Anand",
+      "Email": "kabir.anand@rediffmail.com",
+      "Phone": "9012345678",
+      "UserType": "Customer",
+      "Password": "Kabir#456",
+      "id": "1f9e"
+    },
+    {
+      "UserID": 15,
+      "Name": "Shivani Ghosh",
+      "Email": "shivani.ghosh@yahoo.com",
+      "Phone": "9934567812",
+      "UserType": "Customer",
+      "Password": "Shivani123$",
+      "id": "bc34"
+    },
+    {
+      "UserID": 16,
+      "Name": "Aniket Joshi",
+      "Email": "aniket.joshi@live.com",
+      "Phone": "9789012345",
+      "UserType": "Customer",
+      "Password": "AniketJ@90",
+      "id": "5cd2"
+    },
+    {
+      "UserID": 17,
+      "Name": "Tanya Malhotra",
+      "Email": "tanya.malhotra@gmail.com",
+      "Phone": "9123456677",
+      "UserType": "Customer",
+      "Password": "Tanya!pass12",
+      "id": "7e92"
+    },
+    {
+      "UserID": 18,
+      "Name": "Neeraj Singh",
+      "Email": "neeraj.singh@outlook.com",
+      "Phone": "9870032145",
+      "UserType": "Admin",
+      "Password": "Admin@neeraj",
+      "id": "3af8"
+    },
+    {
+      "UserID": 19,
+      "Name": "Ishita Roy",
+      "Email": "ishita.roy@zmail.com",
+      "Phone": "9500034521",
+      "UserType": "Customer",
+      "Password": "Roy!Ishita78",
+      "id": "f4c7"
+    },
+    {
+      "UserID": 20,
+      "Name": "Mohit Bansal",
+      "Email": "mohitbansal89@gmail.com",
+      "Phone": "9967123456",
+      "UserType": "Customer",
+      "Password": "Mohit89@ban",
+      "id": "6b90"
+    },
+    {
+      "UserID": 21,
+      "Name": "Rupal Shah",
+      "Email": "rupal.shah@ymail.com",
+      "Phone": "9845098761",
+      "UserType": "Customer",
+      "Password": "RupalS!001",
+      "id": "12af"
+    },
+    {
+      "UserID": 22,
+      "Name": "Harsh Patel",
+      "Email": "harsh.patel@gmail.com",
+      "Phone": "9876654321",
+      "UserType": "Customer",
+      "Password": "Harsh@321",
+      "id": "e821"
+    },
+    {
+      "id": "ec09",
+      "UserID": 11,
+      "Name": "shirish",
+      "Email": "siri@gmail.com",
+      "Phone": 9999999999,
+      "UserType": "Customer",
+      "Password": "Hira@999"
+    }
+  ],
+  "Departments": [
+    {
+      "DeptID": 1,
+      "Name": "Logistics",
+      "Contact": "logistics@ecomm.in",
+      "id": "7713"
+    },
+    {
+      "DeptID": 2,
+      "Name": "Refunds",
+      "Contact": "refunds@ecomm.in",
+      "id": "9c13"
+    },
+    {
+      "DeptID": 3,
+      "Name": "Product Quality",
+      "Contact": "quality@ecomm.com",
+      "id": "0707"
+    },
+    {
+      "DeptID": 4,
+      "Name": "Payments",
+      "Contact": "payments@ecomm.in",
+      "id": "63fa"
+    },
+    {
+      "DeptID": 5,
+      "Name": "Customer Support",
+      "Contact": "support@ecomm.in",
+      "id": "d5af"
+    },
+    {
+      "DeptID": 6,
+      "Name": "Returns",
+      "Contact": "returns@ecomm.in",
+      "id": "5320"
+    },
+    {
+      "DeptID": 7,
+      "Name": "Technical Support",
+      "Contact": "tech@ecomm.in",
+      "id": "4380"
+    },
+    {
+      "DeptID": 8,
+      "Name": "Promotions",
+      "Contact": "promo@ecomm.in",
+      "id": "67d2"
+    },
+    {
+      "DeptID": 9,
+      "Name": "Delivery",
+      "Contact": "delivery@ecomm.com",
+      "id": "f62c"
+    }
+  ],
+  "ComplaintTypes": [
+    {
+      "CTID": 2,
+      "ComplaintType": "Damaged Product",
+      "Severity": "critical",
+      "id": "fc2e"
+    },
+    {
+      "CTID": 3,
+      "ComplaintType": "Wrong Item Delivered",
+      "Severity": "high",
+      "id": "149b"
+    },
+    {
+      "CTID": 4,
+      "ComplaintType": "Refund Not Received",
+      "Severity": "Critical",
+      "id": "d663"
+    },
+    {
+      "CTID": 5,
+      "ComplaintType": "Payment Failed",
+      "Severity": "Critical",
+      "id": "efd2"
+    },
+    {
+      "CTID": 6,
+      "ComplaintType": "Order Not Delivered",
+      "Severity": "High",
+      "id": "2be5"
+    },
+    {
+      "CTID": 7,
+      "ComplaintType": "Product Not as Described",
+      "Severity": "Medium",
+      "id": "1117"
+    },
+    {
+      "CTID": 8,
+      "ComplaintType": "Customer Care Not Responsive",
+      "Severity": "Minor",
+      "id": "4ed8"
+    },
+    {
+      "CTID": 10,
+      "ComplaintType": "Coupon Not Working",
+      "Severity": "Minor",
+      "id": "869f"
+    },
+    {
+      "id": "520b",
+      "CTID": 1,
+      "ComplaintType": "Random",
+      "Severity": "High"
+    }
+  ],
+  "Complaints": [
+    {
+      "ComplaintID": 2001,
+      "UserID": 1,
+      "DeptID": 2,
+      "CTID": 3,
+      "Description": "The phone arrived with a cracked screen.",
+      "DateFiled": "2024-07-02",
+      "Status": "Pending",
+      "id": "67f3"
+    },
+    {
+      "ComplaintID": 2002,
+      "UserID": 2,
+      "DeptID": 9,
+      "CTID": 2,
+      "Description": "Delivery was delayed by 5 days.",
+      "DateFiled": "2024-07-04",
+      "Status": "In Progress",
+      "id": "c2ad"
+    },
+    {
+      "ComplaintID": 2003,
+      "UserID": 3,
+      "DeptID": 4,
+      "CTID": 5,
+      "Description": "Payment failed but amount deducted.",
+      "DateFiled": "2024-07-05",
+      "Status": "Pending",
+      "id": "187d"
+    },
+    {
+      "ComplaintID": 2004,
+      "UserID": 4,
+      "DeptID": 3,
+      "CTID": 3,
+      "Description": "I ordered shoes, received sandals.",
+      "DateFiled": "2024-07-07",
+      "Status": "Resolved",
+      "id": "cd04"
+    },
+    {
+      "ComplaintID": 2006,
+      "UserID": 6,
+      "DeptID": 9,
+      "CTID": 6,
+      "Description": "Product never arrived.",
+      "DateFiled": "2024-07-09",
+      "Status": "Resolved",
+      "id": "9d13"
+    },
+    {
+      "ComplaintID": 2007,
+      "UserID": 7,
+      "DeptID": 3,
+      "CTID": 7,
+      "Description": "Color of dress is completely different.",
+      "DateFiled": "2024-07-10",
+      "Status": "Resolved",
+      "id": "6be1"
+    },
+    {
+      "ComplaintID": 2008,
+      "UserID": 8,
+      "DeptID": 5,
+      "CTID": 8,
+      "Description": "Customer support didn’t respond for 2 days.",
+      "DateFiled": "2024-07-11",
+      "Status": "Pending",
+      "id": "09e5"
+    },
+    {
+      "ComplaintID": 2009,
+      "UserID": 9,
+      "DeptID": 10,
+      "CTID": 5,
+      "Description": "Unable to login after password reset.",
+      "DateFiled": "2024-07-11",
+      "Status": "Pending",
+      "id": "65a5"
+    },
+    {
+      "ComplaintID": 2009,
+      "UserID": 9,
+      "DeptID": 2,
+      "CTID": 3,
+      "Description": "Received a used product instead of a new one.",
+      "DateFiled": "2024-07-12",
+      "Status": "Pending",
+      "id": "b3e6"
+    },
+    {
+      "ComplaintID": 2010,
+      "UserID": 10,
+      "DeptID": 6,
+      "CTID": 4,
+      "Description": "App keeps crashing while placing an order.",
+      "DateFiled": "2024-07-12",
+      "Status": "In Progress",
+      "id": "e820"
+    },
+    {
+      "ComplaintID": 2011,
+      "UserID": 11,
+      "DeptID": 3,
+      "CTID": 2,
+      "Description": "Package was left at the wrong address.",
+      "DateFiled": "2024-07-13",
+      "Status": "Pending",
+      "id": "d2c1"
+    },
+    {
+      "ComplaintID": 2012,
+      "UserID": 12,
+      "DeptID": 7,
+      "CTID": 1,
+      "Description": "Item description was misleading.",
+      "DateFiled": "2024-07-14",
+      "Status": "Resolved",
+      "id": "7ab2"
+    },
+    {
+      "ComplaintID": 2013,
+      "UserID": 13,
+      "DeptID": 4,
+      "CTID": 5,
+      "Description": "Refund still not received after 10 days.",
+      "DateFiled": "2024-07-14",
+      "Status": "In Progress",
+      "id": "4d78"
+    },
+    {
+      "ComplaintID": 2014,
+      "UserID": 14,
+      "DeptID": 5,
+      "CTID": 3,
+      "Description": "Received the wrong size despite selecting correctly.",
+      "DateFiled": "2024-07-15",
+      "Status": "Pending",
+      "id": "98de"
+    },
+    {
+      "ComplaintID": 2015,
+      "UserID": 15,
+      "DeptID": 8,
+      "CTID": 6,
+      "Description": "Loyalty points not credited after purchase.",
+      "DateFiled": "2024-07-16",
+      "Status": "Resolved",
+      "id": "27c1"
+    },
+    {
+      "ComplaintID": 2016,
+      "UserID": 16,
+      "DeptID": 2,
+      "CTID": 3,
+      "Description": "Delay in dispatch even after express shipping.",
+      "DateFiled": "2024-07-17",
+      "Status": "In Progress",
+      "id": "5f34"
+    },
+    {
+      "ComplaintID": 2017,
+      "UserID": 17,
+      "DeptID": 9,
+      "CTID": 7,
+      "Description": "Damaged packaging and product inside.",
+      "DateFiled": "2024-07-17",
+      "Status": "Pending",
+      "id": "3bbf"
+    },
+    {
+      "ComplaintID": 2018,
+      "UserID": 18,
+      "DeptID": 1,
+      "CTID": 8,
+      "Description": "No confirmation email received after payment.",
+      "DateFiled": "2024-07-18",
+      "Status": "Resolved",
+      "id": "f5a8"
+    },
+    {
+      "ComplaintID": 2011,
+      "UserID": 11,
+      "DeptID": "1",
+      "CTID": "2",
+      "Description": "sfdsfds",
+      "DateFiled": "2025-04-16",
+      "Status": "Resolved",
+      "id": "4009"
+    },
+    {
+      "id": "f29a",
+      "ComplaintID": 2011,
+      "UserID": 11,
+      "DeptID": "3",
+      "CTID": "8",
+      "Description": "sfdsg",
+      "DateFiled": "2025-04-22",
+      "Status": "Pending"
+    }
+  ]
+}
