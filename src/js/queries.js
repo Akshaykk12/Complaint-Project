@@ -1,6 +1,6 @@
 
 function loadDepartments(){
-    fetch(`${URL}/Departments`)
+    fetch(`http://localhost:8080/api/departments`)
     .then(res => res.json())
     .then(data => {
         departments = data;

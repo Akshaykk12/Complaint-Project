@@ -2,15 +2,67 @@
 // Department
 
 function fetchAndRenderDepartments(){
-    fetch(`${URL}/Departments`)
+    fetch(`${URL}/api/departments`)
         .then(res => res.json())
         .then(data => {
             allDepartments = data;
-            renderDepartments(allDepartments);
+            if(allDepartments.length != 0){
+              renderDepartments(allDepartments);
+            }else{
+              displayDeptTable();
+            }
         })
         .catch(err => {
             console.error("Error fetching data:", err);
         });
+  }
+
+  function displayDeptTable(){
+    const container = document.getElementById("table-container");
+    container.innerHTML = `
+      <div style="text-align: right;">
+          <button onclick="addDepartment()" style="background-color: #44B78B; color:white; height: 4vh; padding: 0 1vw; border: none; border-radius: 4px; font-size: 1em; cursor: pointer;">
+              Add Department
+          </button>
+      </div>
+    `;
+
+    const title = document.createElement("h1");
+    title.textContent = "Departments";
+    container.appendChild(title);
+
+    const table = document.createElement("table");
+    table.style.width = "100%";
+    table.style.borderCollapse = "collapse";
+
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    headRow.innerHTML = `
+      <th>Department</th>
+          <th>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Name</span>
+            <span id="sortArrowDname" style="font-size: 25px; cursor: pointer;">↕</span>
+          </div>
+          </th>
+          <th>Contact</th>
+          <th>Actions</th>
+    `;
+    thead.appendChild(headRow);
+
+    const tbody = document.createElement("tbody");
+    const noDataRow = document.createElement("tr");
+    const noDataCell = document.createElement("td");
+    noDataCell.colSpan = 8;
+    noDataCell.style.textAlign = "center";
+    noDataCell.style.padding = "15px";
+    noDataCell.textContent = "No Departments logged";
+    noDataRow.appendChild(noDataCell);
+    tbody.appendChild(noDataRow);
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    container.appendChild(table);
   }
   
   function displayDepartments(data){
@@ -39,12 +91,12 @@ function fetchAndRenderDepartments(){
         const tr = document.createElement("tr");
   
         tr.innerHTML = `
-          <td>${row.DeptID}</td>
-              <td>${row.Name}</td>
-              <td>${row.Contact}</td>
+              <td>${row.deptId}</td>
+              <td>${row.deptName}</td>
+              <td>${row.deptEmail}</td>
           <td>
-            <button onclick="loadDepartment('${row.id}')">✏️</button>
-            <button onclick="deleteDepartment('${row.id}')">🗑️</button>
+            <button onclick="loadDepartment('${row.deptId}')">✏️</button>
+            <button onclick="deleteDepartment('${row.deptId}')">🗑️</button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -93,7 +145,7 @@ function fetchAndRenderDepartments(){
   
   function deleteDepartment(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
-        fetch(`${URL}/Departments/${id}`, {
+        fetch(`${URL}/api/departments/${id}`, {
             method: "DELETE"
         })
         .then(() => fetchAndRenderDepartments())
@@ -137,13 +189,13 @@ function fetchAndRenderDepartments(){
   
   function addDepartmentToDb(dname = "", demail = "", DeptID = "") {
     const department = {
-      DeptID: DeptID,
-      Name: dname,
-      Contact: demail
+      deptID: DeptID,
+      deptName: dname,
+      deptEmail: demail
     };
   
     if (editIdDept) {
-      fetch(`${URL}/Departments/${editIdDept}`, {
+      fetch(`${URL}/api/departments/${editIdDept}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(department)
@@ -155,7 +207,7 @@ function fetchAndRenderDepartments(){
     } else {
       department.DeptID = deptCounter;
   
-      fetch(`${URL}/Departments`, {
+      fetch(`${URL}/api/departments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(department)
@@ -168,13 +220,13 @@ function fetchAndRenderDepartments(){
   }
   
   function loadDepartment(id) {
-    fetch(`${URL}/Departments/${id}`, {
+    fetch(`${URL}/api/departments/${id}`, {
       method: "GET"
     })
       .then(res => res.json())
       .then(data => {
-        const { Name, Contact, DeptID } = data;
+        const { deptId, deptName, deptEmail } = data;
         editIdDept = id; // ✅ updated here too
-        addDepartment(Name, Contact, DeptID);
+        addDepartment(deptName, deptEmail, deptId);
       });
   }

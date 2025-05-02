@@ -1,4 +1,4 @@
-const URL = "http://localhost:4000";
+const URL = "http://localhost:8080";
 let counter = 10;
 
 function validateName() {
@@ -30,36 +30,37 @@ function validateEmail() {
   const name = document.getElementById("nameInputInReg").value.trim();
   const phone = document.getElementById("phoneInputInReg").value.trim();
   const pass = document.getElementById("passInputInReg").value.trim();
-  counter++;
 
   if (emailRegex.test(email) && email.length !== 0) {
     const user = {
-      UserID: counter,
-      Name: name,
-      Email: email,
-      Phone: Number(phone),
-      UserType: "Customer",
-      Password: pass,
+      name: name,
+      email: email,
+      phone: Number(phone),
+      userType: "Customer",
+      password: pass,
     };
+    console.log(user);
 
-    fetch(`${URL}/Users`)
-      .then(res => res.json())
-      .then(data => {
-        const exists = data.some(user => user.Email === email);
-        if (exists) {
-          msg.innerHTML = "<div style='color: red'> Email already registered</div>";
-        } else {
-          msg.innerHTML = "";
-          fetch(`${URL}/Users`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
-          })
-            .then(() => (window.location.href = "./login.html"))
-            .catch(err => console.error(err));
-        }
+    fetch(`${URL}/api/checkEmail`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user),
+  })
+      .then(res => {
+          if (res.status === 409) {
+              msg.innerHTML = "<div style='color: red'>Email already registered</div>";
+              return;
+          }
+          if (!res.ok) {
+              throw new Error(`Registration failed: ${res.status}`);
+          }
+          // On success, redirect
+          window.location.href = "./login.html";
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+          console.error("Error:", err);
+          msg.innerHTML = "<div style='color: red'>An error occurred. Please try again later.</div>";
+      });
   } else {
     msg.innerHTML = "<div style='color: red'>Enter valid email</div>";
   }

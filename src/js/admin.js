@@ -1,4 +1,4 @@
-const URL = "http://localhost:4000";
+const URL = "http://localhost:8080";
 let sortedDirectionUser = 1;
 let sortedDirectionDept = 1;
 let sortedDirectionCompType = 1;
@@ -12,7 +12,7 @@ let editIdCompType = null;
 
 // Load all the data
 
-fetch(`${URL}/Users`)
+fetch(`${URL}/api/users`)
       .then(res => res.json())
       .then(data => {
           allUsers = data;
@@ -21,7 +21,7 @@ fetch(`${URL}/Users`)
           console.error("Error fetching data:", err);
       });
 
-fetch(`${URL}/Departments`)
+fetch(`${URL}/api/departments`)
       .then(res => res.json())
       .then(data => {
           allDepartments = data;
@@ -30,7 +30,7 @@ fetch(`${URL}/Departments`)
           console.error("Error fetching data:", err);
       });
 
-fetch(`${URL}/ComplaintTypes`)
+fetch(`${URL}/api/complaint-types`)
       .then(res => res.json())
       .then(data => {
           allComplaintTypes = data;
@@ -39,7 +39,7 @@ fetch(`${URL}/ComplaintTypes`)
           console.error("Error fetching data:", err);
       });
 
-fetch(`${URL}/Complaints`)
+fetch(`${URL}/api/complaints`)
       .then(res => res.json())
       .then(data => {
           allComplaints = data;
@@ -74,18 +74,18 @@ function searchAll(search){
   container.innerHTML = '';
   
   const filteredUsers = allUsers.filter(com =>
-    com.Name.toLowerCase().includes(search) ||
-    com.Email.toLowerCase().includes(search)
+    com.name.toLowerCase().includes(search) ||
+    com.email.toLowerCase().includes(search)
   )
   const filteredDepartments = allDepartments.filter(com =>
-    com.Name.toLowerCase().includes(search)
+    com.deptName.toLowerCase().includes(search)
   )
   const filteredComplaintTypes = allComplaintTypes.filter(com =>
-    com.ComplaintType.toLowerCase().includes(search) ||
-    com.Severity.toLowerCase().includes(search) 
+    com.compType.toLowerCase().includes(search) ||
+    com.severity.toLowerCase().includes(search) 
   )
   const filteredComplaints = allComplaints.filter(com =>
-    com.Description.toLowerCase().includes(search)
+    com.description.toLowerCase().includes(search)
   )
   
     const search1 = document.getElementById("search-1");

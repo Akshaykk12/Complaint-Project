@@ -2,15 +2,73 @@
 // Complaint Type
 
 function fetchAndRenderComplaintTypes(){
-    fetch(`${URL}/ComplaintTypes`)
+    fetch(`${URL}/api/complaint-types`)
         .then(res => res.json())
         .then(data => {
             allComplaintTypes = data;
-            renderComplaintType(allComplaintTypes);
+            if(allComplaintTypes.length != 0){
+              renderComplaintType(allComplaintTypes);
+            }else{
+              displayCompTypeTable();
+            }
         })
         .catch(err => {
             console.error("Error fetching data:", err);
         });
+  }
+
+  function displayCompTypeTable(){
+      const container = document.getElementById("table-container");
+      container.innerHTML = `
+        <div style="text-align: right;">
+          <button onclick="addComplaintType()" style="background-color: #44B78B; color:white; height: 4vh; padding: 0 1vw; border: none; border-radius: 4px; font-size: 1em; cursor: pointer;">
+              Add Complaint Type
+          </button>
+      </div>
+      `;
+  
+      const title = document.createElement("h1");
+      title.textContent = "Complaint Types";
+      container.appendChild(title);
+  
+      const table = document.createElement("table");
+      table.style.width = "100%";
+      table.style.borderCollapse = "collapse";
+  
+      const thead = document.createElement("thead");
+      const headRow = document.createElement("tr");
+      headRow.innerHTML = `
+        <th>Complaint Type ID</th>
+        <th>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Complaint Type</span>
+            <span id="sortArrowComplaintType" style="font-size: 25px; cursor: pointer;">↕</span>
+          </div>
+        </th>
+        <th>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Severity</span>
+            <span id="sortArrowSeverity" style="font-size: 25px; cursor: pointer;">↕</span>
+          </div>
+        </th>
+        <th>Actions</th>
+      `;
+      thead.appendChild(headRow);
+  
+      const tbody = document.createElement("tbody");
+      const noDataRow = document.createElement("tr");
+      const noDataCell = document.createElement("td");
+      noDataCell.colSpan = 8;
+      noDataCell.style.textAlign = "center";
+      noDataCell.style.padding = "15px";
+      noDataCell.textContent = "No Complaint Types logged";
+      noDataRow.appendChild(noDataCell);
+      tbody.appendChild(noDataRow);
+  
+      table.appendChild(thead);
+      table.appendChild(tbody);
+      container.appendChild(table);
+    
   }
   
   function displayComplaintTypes(data){
@@ -43,15 +101,15 @@ function fetchAndRenderComplaintTypes(){
       data.forEach(row => {
         const tr = document.createElement("tr");
   
-        const severityBadge = `<span class="severity-badge ${row.Severity.toLowerCase()}">${row.Severity}</span>`;
+        const severityBadge = `<span class="severity-badge ${row.severity.toLowerCase()}">${row.severity}</span>`;
   
         tr.innerHTML = `
-          <td>${row.CTID}</td>
-          <td>${row.ComplaintType}</td>
+          <td>${row.compTypeId}</td>
+          <td>${row.compType}</td>
           <td>${severityBadge}</td>
           <td>
-            <button onclick="loadComplaintType('${row.id}')">✏️</button>
-            <button onclick="deleteComplaintType('${row.id}')">🗑️</button>
+            <button onclick="loadComplaintType('${row.compTypeId}')">✏️</button>
+            <button onclick="deleteComplaintType('${row.compTypeId}')">🗑️</button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -101,7 +159,7 @@ function fetchAndRenderComplaintTypes(){
   
     sortArrowSeverity.addEventListener("click", () => {
       const sorted = [...allComplaintTypes].sort((a, b) =>
-          a.Severity.localeCompare(b.Severity) * sortedDirectionCompType
+          a.severity.localeCompare(b.severity) * sortedDirectionCompType
       );
       
       sortedDirectionCompType *= -1;
@@ -111,7 +169,7 @@ function fetchAndRenderComplaintTypes(){
   
   function deleteComplaintType(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
-        fetch(`${URL}/ComplaintTypes/${id}`, {
+        fetch(`${URL}/api/complaint-types/${id}`, {
             method: "DELETE"
         })
         .then(() => fetchAndRenderComplaintTypes())
@@ -161,13 +219,13 @@ function fetchAndRenderComplaintTypes(){
   
   function addComplaintTypeToDb(complaintType = "", severity = "", ctID = "") {
     const complaintTypes = {
-      CTID: ctID,
-      ComplaintType: complaintType,
-      Severity: severity
+      compTypeId: ctID,
+      compType: complaintType,
+      severity: severity
     };
   
     if (editIdCompType) {
-      fetch(`${URL}/ComplaintTypes/${editIdCompType}`, {
+      fetch(`${URL}/api/complaint-types/${editIdCompType}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(complaintTypes)
@@ -179,7 +237,7 @@ function fetchAndRenderComplaintTypes(){
     } else {
       complaintTypes.CTID = compTypCounter;
   
-      fetch(`${URL}/ComplaintTypes`, {
+      fetch(`${URL}/api/complaint-types`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(complaintTypes)
@@ -192,14 +250,14 @@ function fetchAndRenderComplaintTypes(){
   }
   
   function loadComplaintType(id) {
-    fetch(`${URL}/ComplaintTypes/${id}`, {
+    fetch(`${URL}/api/complaint-types/${id}`, {
       method: "GET"
     })
       .then(res => res.json())
       .then(data => {
-        const { ComplaintType, Severity, CTID } = data;
+        const { compTypeId, compType, severity } = data;
         editIdCompType = id; // ✅ updated here too
-        addComplaintType(ComplaintType, Severity, CTID);
+        addComplaintType(compType, severity, compTypeId);
       });
   }
   

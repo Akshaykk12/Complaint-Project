@@ -48,30 +48,22 @@ function fileComplaint() {
 }
 
 
-const URL = "http://localhost:4000";
+const URL = "http://localhost:8080";
 let departments = [];
 let complaintType = [];
 
-fetch(`${URL}/ComplaintTypes`)
-    .then(res => res.json())
-    .then(data => {
-        complaintType = data;
-        
-    })
-    .catch(error => console.error("Error loading complaint types:", error));
-
-    fetch(`${URL}/Departments`)
-    .then(res => res.json())
-    .then(data => {
-        departments = data;
-        
-    })
-    .catch(error => console.error("Error loading departments:", error));
+fetch(`${URL}/api/users/form-data`)
+.then(res => res.json())
+.then(data => {
+    departments = data.departments;
+    complaintType = data.complaintTypes;
+    users = data.users;
+});
 
 function loadDepartments(){
     const deptSelect = document.getElementById("deptId");
         departments.forEach(dept => {
-            deptSelect.innerHTML += `<option value="${dept.DeptID}">${dept.Name}</option>`;
+            deptSelect.innerHTML += `<option value="${dept.deptId}">${dept.deptName}</option>`;
         });
 }
 
@@ -79,35 +71,32 @@ function loadComplaintType(){
     
     const ctSelect = document.getElementById("compId");
     complaintType.forEach(comp => {
-        ctSelect.innerHTML += `<option value="${comp.CTID}">${comp.ComplaintType}</option>`;
+        ctSelect.innerHTML += `<option value="${comp.compTypeId}">${comp.compType}</option>`;
     });
 }
+
+
 let counter = 2011;
 
 function addComplaint() {
     const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
-    const department = document.getElementById("deptId").value;
-    const complaintType = document.getElementById("compId").value;
+    const deptId = document.getElementById("deptId").value;
+    const compId = document.getElementById("compId").value;
     const description = document.getElementById("comId").value;
-    const date = document.getElementById("comDate").value;
 
-
-    if (!department || !complaintType || !description || !date || !loggedInUser) {
+    if (!deptId || !compId || !description || !loggedInUser) {
         alert("Please fill all fields and make sure you're logged in.");
         return;
     }
-
     const complaint = {
-        ComplaintID: counter,
-        UserID: loggedInUser.UserID,  // assuming your user object has UserID
-        DeptID: department,
-        CTID: complaintType,
-        Description: description,
-        DateFiled: date,
-        Status: "Pending"
+        userId: loggedInUser.id,  
+        deptId: deptId,
+        ctId: compId,
+        description: description,
+        status: "Pending"
     };
 
-    fetch(`${URL}/Complaints`, {
+    fetch(`${URL}/api/complaints`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(complaint)
@@ -119,7 +108,7 @@ function addComplaint() {
     .then(() => {
         counter++;
         alert("Complaint logged successfully!");
-        document.getElementById("empForm").reset(); // reset form after submission
+        document.getElementById("empForm").reset(); 
        
     })
     .catch(err => {
@@ -128,14 +117,15 @@ function addComplaint() {
     });
     sessionStorage.setItem("lastPageVisited", "fileComplaint");
 }
+
 function getDeptName(deptID) {
-    const dept = departments.find(d => d.DeptID == deptID);
-    return dept ? dept.Name : "Unknown";
+    const dept = departments.find(d => d.deptId === deptID);
+    return dept ? dept.deptName : "Unknown";
 }
 
 function getComplaintTypeName(ctID) {
-    const ct = complaintType.find(t => t.CTID == ctID);
-    return ct ? ct.ComplaintType : "Unknown";
+    const ct = complaintType.find(t => t.compTypeId == ctID);
+    return ct ? ct.compType : "Unknown";
 }
 
 
@@ -145,7 +135,6 @@ function showComplaints(){
         <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; text-align: left; border-collapse: collapse;">
             <thead>
                 <tr>
-                    <th>Complaint ID</th>
                     <th>Department</th>
                     <th>Complaint Type</th>
                     <th>Description</th>
@@ -160,10 +149,10 @@ function showComplaints(){
         </table>
     `;
 
-    fetch(`${URL}/Complaints`)
+    fetch(`${URL}/api/complaints`)
         .then(res => res.json())
         .then(complaints => {
-            const userComplaints = complaints.filter(c => c.UserID === loggedInUser.UserID);
+            const userComplaints = complaints.filter(c => c.userId === loggedInUser.id);
 
             if (userComplaints.length === 0) {
                 document.getElementById("complaintTableBody").innerHTML = `
@@ -171,17 +160,15 @@ function showComplaints(){
                 return;
             }
 
-            // Build table rows
             const rows = userComplaints.map(c => `
                 <tr>
-                    <td>${c.ComplaintID}</td>
-                    <td>${getDeptName(c.DeptID)}</td>
-                    <td>${getComplaintTypeName(c.CTID)}</td>
-                    <td>${c.Description}</td>
-                    <td>${c.DateFiled}</td>
-                    <td>${c.Status}</td>
+                    <td>${getDeptName(c.deptId)}</td>
+                    <td>${getComplaintTypeName(c.ctId)}</td>
+                    <td>${c.description}</td>
+                    <td>${c.date}</td>
+                    <td>${c.status}</td>
                     <td>
-                        <div onclick="deleteComplaint('${c.id}')">🗑️</div>
+                        <div onclick="deleteComplaint('${c.compId}')">🗑️</div>
                     </td>
                 </tr>
             `).join("");
@@ -195,12 +182,20 @@ function showComplaints(){
         });
 }
 function deleteComplaint(id) {
+    console.log(id);
     if (confirm("Are you sure you wanna delete the data?")) {
-        fetch(`${URL}/Complaints/${id}`, {
+        fetch(`${URL}/api/complaints/${id}`, {
             method: "DELETE"
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+            console.log("Delete successful");
         })
         .catch(err => console.error("Delete failed:", err));
         sessionStorage.setItem("lastPageVisited", "deleteComp");
+        showComplaints();
     }
   }
 

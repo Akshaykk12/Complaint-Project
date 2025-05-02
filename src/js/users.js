@@ -1,15 +1,64 @@
 
 // User
 function fetchAndRenderUsers(){
-    fetch(`${URL}/Users`)
+    fetch(`${URL}/api/users`)
         .then(res => res.json())
         .then(data => {
             allUsers = data;
-            renderUsers(allUsers);
+            if (allUsers.length != 0){
+              renderUsers(allUsers);
+            }else{
+              displayUsersTable();
+            }
         })
         .catch(err => {
             console.error("Error fetching data:", err);
         });
+  }
+
+  function displayUsersTable(){
+    const container = document.getElementById("table-container");
+    container.innerHTML = ``;
+
+    const title = document.createElement("h1");
+    title.textContent = "Departments";
+    container.appendChild(title);
+
+    const table = document.createElement("table");
+    table.style.width = "100%";
+    table.style.borderCollapse = "collapse";
+
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    headRow.innerHTML = `
+      <th>User ID</th>
+        <th>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Name</span>
+            <span id="sortArrowName" style="font-size: 25px; cursor: pointer;">↕</span>
+          </div>
+        </th>
+        <th>Email</th>
+        <th>Phone no.</th>
+        <th>UserType</th>
+        <th>Password</th>
+        <th>Actions</th>
+    `;
+    thead.appendChild(headRow);
+
+    const tbody = document.createElement("tbody");
+    const noDataRow = document.createElement("tr");
+    const noDataCell = document.createElement("td");
+    noDataCell.colSpan = 8;
+    noDataCell.style.textAlign = "center";
+    noDataCell.style.padding = "15px";
+    noDataCell.textContent = "No Departments logged";
+    noDataRow.appendChild(noDataCell);
+    tbody.appendChild(noDataRow);
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    container.appendChild(table);
   }
   
   function displayUsers(data){
@@ -41,12 +90,12 @@ function fetchAndRenderUsers(){
         const tr = document.createElement("tr");
   
         tr.innerHTML = `
-          <td>${row.UserID}</td>
-          <td>${row.Name}</td>
-          <td>${row.Email}</td>
-          <td>${row.Phone}</td>
-          <td>${row.UserType}</td>
-          <td>${row.Password}</td>
+          <td>${row.id}</td>
+          <td>${row.name}</td>
+          <td>${row.email}</td>
+          <td>${row.phone}</td>
+          <td>${row.userType}</td>
+          <td>${row.password}</td>
           <td>
             <button onclick="deleteUser('${row.id}')">🗑️</button>
           </td>`;
@@ -58,7 +107,7 @@ function fetchAndRenderUsers(){
   }
   function deleteUser(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
-        fetch(`${URL}/Users/${id}`, {
+        fetch(`${URL}/api/users/${id}`, {
             method: "DELETE"
         })
         .then(() => fetchAndRenderUsers())
@@ -91,7 +140,7 @@ function fetchAndRenderUsers(){
   
     sortArrowName.addEventListener("click", () => {
       const sorted = [...allUsers].sort((a, b) =>
-          a.Name.localeCompare(b.Name) * sortedDirectionUser
+          a.name.localeCompare(b.name) * sortedDirectionUser
       );
       
       sortedDirectionUser *= -1;

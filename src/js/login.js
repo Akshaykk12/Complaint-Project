@@ -1,4 +1,6 @@
-const URL = "http://localhost:4000"; // Adjust if your json-server uses a different port
+const URL = "http://localhost:8080";  
+
+
 
 function validateEmailLogin() {
   const emailInput = document.getElementById("emailInput").value;
@@ -16,40 +18,75 @@ function validateEmailLogin() {
 }
 
 function checkUsernamePassword() {
-  const passInput = document.getElementById("passInput").value;
   const emailInput = document.getElementById("emailInput").value;
+  const passInput = document.getElementById("passInput").value;
   const validPass = document.getElementById("validPass");
 
-  fetch(`${URL}/Users`)
-    .then((res) => res.json())
-    .then((data) => {
-      const user = data.find(
-        (res) => res.Email === emailInput && res.Password === passInput
-      );
+  fetch(`${URL}/api/authenticate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json",},
+    body: JSON.stringify({email: emailInput, password: passInput}),
+  })
+  .then((res) => res.text()) 
+  .then((text) => {
+    if (!text) {
+      validPass.innerHTML = "Invalid username or password.";
+      return;
+    }
+  
+    const user = JSON.parse(text);
+  
+    sessionStorage.setItem("loggedInUser", JSON.stringify(user));
+  
+    if (user.userType === "Customer") {
+      window.location.href = "users.html";
+    } else if (user.userType === "Admin") {
+      window.location.href = "admin.html";
+    } else {
+      validPass.innerHTML = "Unknown user type.";
+    }
+  })
+  .catch((error) => {
+    console.error("Login error:", error);
+    validPass.innerHTML = "Something went wrong. Please try again.";
+  });
+  
+}
 
-      if (user) {
-        validPass.innerHTML = "";
+function checkUsernamePassword() {
+  const emailInput = document.getElementById("emailInput").value;
+  const passInput = document.getElementById("passInput").value;
+  const validPass = document.getElementById("validPass");
 
-        // 🧠 Store user data in sessionStorage
-        sessionStorage.setItem("loggedInUser", JSON.stringify(user));
-
-        const userType = user.UserType;
-        if (userType === "Customer") {
-          window.location.href = "users.html";
-        } else if (userType === "Admin") {
-          window.location.href = "admin.html";
-        }
-
-        return true;
-      } else {
-        validPass.innerHTML = "Incorrect Username or Password";
-        return false;
-      }
-    })
-    .catch((err) => {
-      console.error("Error fetching users:", err);
-      validPass.innerHTML = "Something went wrong. Try again later.";
-    });
+  fetch(`${URL}/api/authenticate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json",},
+    body: JSON.stringify({email: emailInput, password: passInput}),
+  })
+  .then((res) => res.text()) 
+  .then((text) => {
+    if (!text) {
+      validPass.innerHTML = "Invalid username or password.";
+      return;
+    }
+  
+    const user = JSON.parse(text);
+  
+    sessionStorage.setItem("loggedInUser", JSON.stringify(user));
+  
+    if (user.userType === "Customer") {
+      window.location.href = "users.html";
+    } else if (user.userType === "Admin") {
+      window.location.href = "admin.html";
+    } else {
+      validPass.innerHTML = "Unknown user type.";
+    }
+  })
+  .catch((error) => {
+    console.error("Login error:", error);
+    validPass.innerHTML = "Something went wrong. Please try again.";
+  });
+  
 }
 
 function loginUser() {

@@ -1,23 +1,95 @@
 
 // Complaint
 
+// const { table } = require("console");
+
 function fetchAndRenderComplaints(){
-    fetch(`${URL}/Complaints`)
+  
+    fetch(`${URL}/api/complaints`)
         .then(res => res.json())
         .then(data => {
             allComplaints = data;
-            renderComplaints(allComplaints);
+            if(allComplaints.length != 0){
+              renderComplaints(allComplaints);
+            }else{
+              displayComplaintTable();
+            }
         })
         .catch(err => {
             console.error("Error fetching data:", err);
         });
   }
+
+  function displayComplaintTable(){
+    const container = document.getElementById("table-container");
+    container.innerHTML = "";
+
+    const title = document.createElement("h1");
+    title.textContent = "Complaints";
+    container.appendChild(title);
+
+    const table = document.createElement("table");
+    table.style.width = "100%";
+    table.style.borderCollapse = "collapse";
+
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    headRow.innerHTML = `
+      <th>Complaint ID</th>
+        <th>User</th>
+        <th>Department</th>
+        <th>Complaint Type</th>
+        <th>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Description</span>
+            <span id="sortArrowDescription" style="font-size: 25px; cursor: pointer;">↕</span>
+          </div>
+        </th>
+        <th>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Date Filed</span>
+            <span id="sortArrowDataFiled" style="font-size: 25px; cursor: pointer;">↕</span>
+          </div>
+        </th>
+        <th>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Status</span>
+            <span id="sortArrowStatus" style="font-size: 25px; cursor: pointer;">↕</span>
+          </div>
+        </th>
+        <th>Actions</th>
+    `;
+    thead.appendChild(headRow);
+
+    const tbody = document.createElement("tbody");
+    const noDataRow = document.createElement("tr");
+    const noDataCell = document.createElement("td");
+    noDataCell.colSpan = 8;
+    noDataCell.style.textAlign = "center";
+    noDataCell.style.padding = "15px";
+    noDataCell.textContent = "No complaints logged";
+    noDataRow.appendChild(noDataCell);
+    tbody.appendChild(noDataRow);
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    container.appendChild(table);
+  }
   
   function displayComplaints(data){
+    fetch(`${URL}/api/users/form-data`)
+.then(res => res.json())
+.then(data => {
+    console.log(data);
+    departments = data.departments;
+    complaintType = data.complaintTypes;
+    users = data.users;
+
+});
     
-    const userMap = Object.fromEntries(allUsers.map(u => [u.UserID, u.Name]));
-    const deptMap = Object.fromEntries(allDepartments.map(d => [d.DeptID, d.Name]));
-    const ctMap = Object.fromEntries(allComplaintTypes.map(c => [c.CTID, c.ComplaintType]));
+    const userMap = Object.fromEntries(allUsers.map(u => [u.id, u.name]));
+    const deptMap = Object.fromEntries(allDepartments.map(d => [d.deptId, d.deptName]));
+    const ctMap = Object.fromEntries(allComplaintTypes.map(c => [c.compTypeId, c.compType]));
     const table = document.createElement("table");
     
     const thead = document.createElement("thead");
@@ -55,20 +127,20 @@ function fetchAndRenderComplaints(){
       const tbody = document.createElement("tbody");
       data.forEach(row => {
         const tr = document.createElement("tr");
-        const statusClass = row.Status.toLowerCase().replace(/\s/g, '-');
-        const statusBadge = `<span class="status-badge ${statusClass}">${row.Status}</span>`;
+        const statusClass = row.status.toLowerCase().replace(/\s/g, '-');
+        const statusBadge = `<span class="status-badge ${statusClass}">${row.status}</span>`;
   
         tr.innerHTML = `
-          <td>${row.ComplaintID}</td>
-          <td>${userMap[row.UserID] || 'Unknown User'}</td>
-          <td>${deptMap[row.DeptID] || 'Unknown Dept'}</td>
-          <td>${ctMap[row.CTID] || 'Unknown Type'}</td>
-          <td>${row.Description}</td>
-          <td>${row.DateFiled}</td>
+          <td>${row.compId}</td>
+          <td>${userMap[row.userId] || 'Unknown User'}</td>
+          <td>${deptMap[row.deptId] || 'Unknown Dept'}</td>
+          <td>${ctMap[row.ctId] || 'Unknown Type'}</td>
+          <td>${row.description}</td>
+          <td>${row.date}</td>
           <td>${statusBadge}</td>
           <td>
-            <button onclick="loadComplaint('${row.id}', '${userMap[row.UserID] || 'Unknown User'}', '${deptMap[row.DeptID] || 'Unknown Dept'}', '${ctMap[row.CTID] || 'Unknown Type'}')">✏️</button>
-            <button onclick="deleteComplaint('${row.id}')">🗑️</button>
+            <button onclick="loadComplaint('${row.compId}', '${userMap[row.UserID] || 'Unknown User'}', '${deptMap[row.DeptID] || 'Unknown Dept'}', '${ctMap[row.CTID] || 'Unknown Type'}')">✏️</button>
+            <button onclick="deleteComplaint('${row.compId}')">🗑️</button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -79,7 +151,7 @@ function fetchAndRenderComplaints(){
   
   function deleteComplaint(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
-        fetch(`${URL}/Complaints/${id}`, {
+        fetch(`${URL}/api/complaints/${id}`, {
             method: "DELETE"
         })
         .then(() => fetchAndRenderComplaints())
@@ -217,17 +289,16 @@ function fetchAndRenderComplaints(){
   
   function addComplaintToDb(cid, user, dept, compType, description, date, status) {
     const complaint = {
-      ComplaintID: cid,
-      UserID: user,
-      DeptID: dept,
-      CTID: compType,
-      Description: description,
-      DateFiled: date,
-      Status: status
+      userId: user,
+      deptId: dept,
+      ctId: compType,
+      description: description,
+      date: date,
+      status: status
     };
   
     if (editIdCompType) {
-      fetch(`${URL}/Complaints/${editIdCompType}`, {
+      fetch(`${URL}/api/complaints/${editIdCompType}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(complaint)
@@ -240,14 +311,15 @@ function fetchAndRenderComplaints(){
   }
   
   function loadComplaint(id, user, dept, ctId) {
-    fetch(`${URL}/Complaints/${id}`, {
+    fetch(`${URL}/api/complaints/${id}`, {
       method: "GET"
     })
       .then(res => res.json())
       .then(data => {
-        const { ComplaintID, UserID, DeptID,CTID, Description, DateFiled, Status  } = data;
+        console.log(data);
+        const { compId, ctId, date,deptId, description, status, userId  } = data;
         editIdCompType = id; // ✅ updated here too
-        addComplaint(ComplaintID, UserID, DeptID, CTID, Description, DateFiled, Status);
+        addComplaint(compId, userId, deptId, ctId, description, date, status);
       });
       sessionStorage.setItem("lastPageVisited", "complaint");
   }
