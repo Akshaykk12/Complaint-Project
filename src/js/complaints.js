@@ -184,7 +184,7 @@ function fetchAndRenderComplaints(){
   
     sortArrowDescription.addEventListener("click", () => {
       const sorted = [...allComplaints].sort((a, b) =>
-          a.Description.localeCompare(b.Description) * sortedDirectionComp
+          a.description.localeCompare(b.description) * sortedDirectionComp
       );
       
       sortedDirectionComp *= -1;
@@ -194,7 +194,7 @@ function fetchAndRenderComplaints(){
   
     sortArrowStatus.addEventListener("click", () => {
       const sorted = [...allComplaints].sort((a, b) =>
-          a.Status.localeCompare(b.Status) * sortedDirectionComp
+          a.status.localeCompare(b.status) * sortedDirectionComp
       );
       
       sortedDirectionComp *= -1;
@@ -204,7 +204,7 @@ function fetchAndRenderComplaints(){
   
     sortArrowDataFiled.addEventListener("click", () => {
       const sorted = [...allComplaints].sort((a, b) =>
-          a.DateFiled.localeCompare(b.DateFiled) * sortedDirectionComp
+          a.date.localeCompare(b.date) * sortedDirectionComp
       );
       
       sortedDirectionComp *= -1;

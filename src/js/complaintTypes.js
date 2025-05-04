@@ -146,10 +146,10 @@ function fetchAndRenderComplaintTypes(){
       container.appendChild(displayComplaintTypes(data));
     }
     const sortArrowComplaintType = document.getElementById("sortArrowComplaintType");
-  
+    console.log(allComplaintTypes);
     sortArrowComplaintType.addEventListener("click", () => {
       const sorted = [...allComplaintTypes].sort((a, b) =>
-          a.ComplaintType.localeCompare(b.ComplaintType) * sortedDirectionCompType
+          a.compType.localeCompare(b.compType) * sortedDirectionCompType
       );
       
       sortedDirectionCompType *= -1;

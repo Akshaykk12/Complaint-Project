@@ -132,10 +132,9 @@ function fetchAndRenderDepartments(){
       container.appendChild(displayDepartments(data));
     }
     const sortArrowDname = document.getElementById("sortArrowDname");
-  
     sortArrowDname.addEventListener("click", () => {
       const sorted = [...allDepartments].sort((a, b) =>
-          a.Name.localeCompare(b.Name) * sortedDirectionDept
+          a.deptName.localeCompare(b.deptName) * sortedDirectionDept
       );
       
       sortedDirectionDept *= -1;
