@@ -177,6 +177,8 @@ function fetchAndRenderDepartments(){
               Save
           </button>
       </div>
+
+      <div id="addDeptErrBox" style="color:Red; display:flex; justify-content:center"></div>
     `;
   
     document.getElementById("addBtn").addEventListener("click", () => {
@@ -211,10 +213,16 @@ function fetchAndRenderDepartments(){
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(department)
-      }).then(() => {
-        fetchAndRenderDepartments();
-        deptCounter++;
-      });
+      })
+      .then(response => {
+        if(response.status === 409){
+          const addDeptError = document.getElementById("addDeptErrBox") ;
+          addDeptError.innerHTML = "Department Name already exists";
+        }
+        else if (response.ok){
+          fetchAndRenderDepartments();
+        } 
+      })
       sessionStorage.setItem("lastPageVisited", "department");
     }
   }
@@ -226,7 +234,7 @@ function fetchAndRenderDepartments(){
       .then(res => res.json())
       .then(data => {
         const { deptId, deptName, deptEmail } = data;
-        editIdDept = id; // ✅ updated here too
+        editIdDept = id; 
         addDepartment(deptName, deptEmail, deptId);
       });
   }

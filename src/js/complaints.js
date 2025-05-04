@@ -213,7 +213,6 @@ function fetchAndRenderComplaints(){
     
   }
   
-  //Incomplete
   
   function addComplaint(cid, user, dept, compType, description, date, status) {
     const container = document.getElementById("table-container");
@@ -263,7 +262,8 @@ function fetchAndRenderComplaints(){
     <label style="flex: 0 0 25%; font-weight: 500;">Status:</label>
     <select id="status" style="flex: 1; padding: 0.6vh 1vw; border: 1px solid #ccc; border-radius: 5px; font-size: 1em;">
       <option value="${status}">${status}</option>
-      <option value="Pending">Pending</option>
+      
+      <option value="Pending"><span class="status-badge ${'Pending'}">Pending</span></option>
       <option value="In Progress">In Progress</option>
       <option value="Resolved">Resolved</option>
       <option value="Closed">Closed</option>

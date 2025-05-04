@@ -206,6 +206,7 @@ function fetchAndRenderComplaintTypes(){
           Save
       </button>
   </div>
+  <div id="addCompTypeErrBox" style="color:Red; display:flex; justify-content:center"></div>
   
     `;
   
@@ -241,10 +242,15 @@ function fetchAndRenderComplaintTypes(){
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(complaintTypes)
-      }).then(() => {
-        fetchAndRenderComplaintTypes();
-        compTypCounter++;
-      });
+      }).then(response => {
+        if(response.status === 409){
+          const addDeptError = document.getElementById("addCompTypeErrBox") ;
+          addDeptError.innerHTML = "Complaint Type Already Exists";
+        }
+        else if (response.ok){
+          fetchAndRenderComplaintTypes();
+        } 
+      })
       sessionStorage.setItem("lastPageVisited", "complaintType");
     }
   }

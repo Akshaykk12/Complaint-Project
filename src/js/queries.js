@@ -1,12 +1,11 @@
 
 function loadDepartments(){
-    fetch(`http://localhost:8080/api/departments`)
+    fetch(`http://localhost:8080/api/departments/deptName`)
     .then(res => res.json())
     .then(data => {
-        departments = data;
         const deptSelect = document.getElementById("deptQuery");
         data.forEach(dept => {
-            deptSelect.innerHTML += `<option value="${dept.DeptID}">${dept.Name}</option>`;
+            deptSelect.innerHTML += `<option value="${dept.deptName}">${dept.deptName}</option>`;
         });
     });
 }
@@ -30,7 +29,7 @@ function getQueries(){
 
   <button 
     onclick="fetchComplaintsByDepartment()" 
-    style="padding: 0.5em 1em; background-color: #; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    style="padding: 0.5em 1em; background-color: Green; color: white; border: none; border-radius: 4px; cursor: pointer;">
     Search
   </button>
 
@@ -52,7 +51,7 @@ function fetchComplaintsByDepartment() {
     return;
   }
 
-  fetch(`${URL}/Complaints?DeptID=${deptId}`)
+  fetch(`${URL}/api/complaints/getCompByDept/${deptId}`)
     .then(res => res.json())
     .then(complaints => {
       if (!Array.isArray(complaints) || complaints.length === 0) {
@@ -76,10 +75,10 @@ function fetchComplaintsByDepartment() {
         <tbody>
           ${complaints.map(c => `
             <tr>
-              <td style="border: 1px solid #ccc; padding: 8px;">${c.ComplaintID}</td>
-              <td style="border: 1px solid #ccc; padding: 8px;">${c.Description}</td>
-              <td style="border: 1px solid #ccc; padding: 8px;">${c.Status}</td>
-              <td style="border: 1px solid #ccc; padding: 8px;">${c.DateFiled}</td>
+              <td style="border: 1px solid #ccc; padding: 8px;">${c.compId}</td>
+              <td style="border: 1px solid #ccc; padding: 8px;">${c.description}</td>
+              <td style="border: 1px solid #ccc; padding: 8px;"><span class="status-badge ${c.status.toLowerCase().replace(/\s/g, '-')}">${c.status}</span></td>
+              <td style="border: 1px solid #ccc; padding: 8px;">${c.date}</td>
             </tr>
           `).join('')}
         </tbody>
