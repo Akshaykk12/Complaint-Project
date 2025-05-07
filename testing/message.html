@@ -1,99 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Socket Client</title>
-    <!-- Bootstrap CSS CDN link -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      /* Custom styling */
-      body {
-        padding: 20px;
-      }
-      #messages {
-        margin-top: 20px;
-      }
-      .outgoing-message {
-        text-align: right;
-        background-color: #308D46;
-        color:white;
-        margin-bottom: 10px;
-        padding:10px;
-        border-radius:5px;
-      }
-      .incoming-message {
-        text-align: left;
-        background-color: #2C3E50;
-        color:white;
-        margin-bottom: 10px;
-        padding:10px;
-        border-radius:5px;
-      }
-      .gfg-color{
-      background-color:#308D46;
-      color:white;
-      }
-      .gfg-color:hover{
-      color:white;
-      }
-      .gfg-blue{
-      background-color:#2C3E50;
-      color:white;
-      }
-      .gfg-blue:hover{
-      color:white;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <input
-            type="text"
-            id="name"
-            class="form-control mb-2"
-            placeholder="Your Name"
-          />
-          <input
-            id="connectButton"
-            type="button"
-            value="Connect"
-            class="btn gfg-blue mb-2"
-            onclick="connect()"
-          />
+<head>
+    <meta charset="UTF-8">
+    <title>Complaint Chat</title>
+</head>
+<body>
+    <!-- <h1>Complaint Chat </h1> -->
+    <div style="display: flex; flex-direction: column; justify-content: space-between; height: 80vh; padding: 10px; ">
+
+        <!-- Complaint ID input section -->
+        <div style="margin-bottom: 10px;">
+            <label for="compId">Complaint ID:</label>
+            <input type="text" id="compId" placeholder="Enter complaint ID" style="margin-left: 10px; padding: 5px; border-radius: 5px;">
+            <button onclick="connectToComplaint()" style="margin-left: 10px; padding: 5px 10px; border-radius: 5px; background-color: #44B78B; color: white; cursor: pointer;">Connect</button>
         </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <input
-            type="text"
-            id="message"
-            class="form-control mb-2"
-            placeholder="Type a message"
-          />
-          <input
-            type="button"
-            value="Send"
-            class="btn gfg-color mb-2"
-            onclick="sendToGroupChat()"
-          />
+    
+        <!-- Chat messages section -->
+        <div style="flex-grow: 1; overflow-y: auto; background-color: #f5f5f5; padding: 10px; border-radius: 10px;">
+            <ul id="messages" style="list-style-type: none; padding: 0; margin: 0;">
+                <!-- Example message block -->
+                <!-- <li style="margin-bottom: 20px;">
+                    <div style="max-width: 60%; background-color: lightgray; border-radius: 10px; padding: 10px;">
+                        Hi !! This is a message from Riya. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </div>
+                    <div style="font-size: 12px; color: gray; margin-top: 5px;">18:06 PM | July 24</div>
+                </li>
+    
+                <li style="margin-bottom: 20px; text-align: right;">
+                    <div style="display: inline-block; max-width: 60%; background-color: #44B78B; border-radius: 10px; padding: 10px; color: white;">
+                        Hi Riya, Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </div>
+                    <div style="font-size: 12px; color: gray; margin-top: 5px;">18:30 PM | July 24</div>
+                </li> -->
+                <!-- Repeat more <li> as needed -->
+            </ul>
         </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div id="messages" class="border p-3"></div>
+    
+        <!-- Message input section -->
+        <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center;">
+            <input type="text" id="messageInput" placeholder="Enter message" style="flex: 1; max-width: 70%; height: 40px; border-radius: 20px; border: 1px solid #ccc; padding: 0 15px; background-color: #fff; color: black; margin-right: 10px;">
+            <button onclick="sendMessage()" style="padding: 10px 20px; border-radius: 20px; background-color: #44B78B; color: white; cursor: pointer;">Send</button>
         </div>
-      </div>
+    
     </div>
+    
 
-    <!-- Bootstrap JS CDN -->
-    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <script>
+        let socket = null;
+        let currentCompId = null;
 
-    <script src="./message.js"></script>
-  </body>
+        function connectToComplaint() {
+            let compId = document.getElementById("compId").value;
+            let mesgBox = document.getElementById("messages");
+            mesgBox.innerText = ""; // Clear existing messages
+            if (socket) {
+                socket.close();
+                console.log(`Disconnected from complaint ${currentCompId}`);
+            }
+
+            currentCompId = compId;
+            socket = new WebSocket(`ws://localhost:8080/chat?compId=${compId}`);
+
+            socket.onopen = () => {
+                console.log(`Connected to complaint ${compId}`);
+            };
+
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+
+                
+                if (message.from && message.to && message.content) {
+                    if(message.from == "admin"){
+                        mesgBox.innerHTML += `
+                        <li style="margin-bottom: 20px; text-align: right;">
+                    <div style="display: inline-block; max-width: 60%; background-color: #44B78B; border-radius: 10px; padding: 10px; color: white;">
+                    ${message.content}
+                    </div>
+                </li>
+                        `;
+                    }
+                    else if(message.from == "user"){
+                        mesgBox.innerHTML += `
+                            <li style="margin-bottom: 20px;">
+                    <div style="max-width: 60%; background-color: lightgray; border-radius: 10px; padding: 10px;">
+                        ${message.content}
+                    </div>
+                </li>
+                        `;
+                    }
+                    // const li = document.createElement('li');
+                    // li.textContent = `${message.from} ➔ ${message.to}: ${message.content}`;
+                    // document.getElementById('messages').appendChild(li);
+                } else {
+                    console.error('Invalid message format:', message);
+                }
+                
+            };
+
+            socket.onclose = () => {
+                console.log(`Socket closed for complaint ${compId}`);
+            };
+
+            socket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const messageText = input.value;
+            const message = {
+                from: "admin",    // You can change this as per your use case
+                to: `Comp${currentCompId}`,       // Assuming 'to' should be formatted like "CompID"
+                content: messageText,
+                compId: currentCompId
+            };
+
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify(message));
+                input.value = ''; // Clear the input field after sending
+            } else {
+                console.log('Socket is not connected');
+            }
+        }
+    </script>
+</body>
 </html>

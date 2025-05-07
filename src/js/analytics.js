@@ -1,50 +1,85 @@
-const apiBase = 'http://localhost:4000';
+const apiBase = 'http://localhost:8080';
+
+
 function renderCharts(){
-fetch(`${apiBase}/Users`)
-  .then(res => res.json())
+  let statusPieChartInstance = null;
+    
+  fetch(`http://localhost:8080/api/users/getTotalUsers`)
+  .then(res => res.text())
   .then(data => {
-    document.getElementById("userCount").textContent = data.length;
+
+    document.getElementById("userCount").textContent = data
   });
 
-fetch(`${apiBase}/Complaints`)
+  fetch(`http://localhost:8080/api/complaints/getTotalComp`)
+  .then(res => res.text())
+  .then(data => {
+    
+    document.getElementById("complaintCount").textContent = data
+  });
+
+  fetch(`http://localhost:8080/api/complaints/getCompStatusCount`)
   .then(res => res.json())
   .then(data => {
-    document.getElementById("complaintCount").textContent = data.length;
-    const statusCounts = {};
-    const dateCounts = {};
+    const statusLabels = data.map(c => c.status);
+    const statusValues = data.map(c => c.count);
+    
+    if (statusPieChartInstance !== null) {
+      statusPieChartInstance.destroy();
+  }
 
-    data.forEach(c => {
-      const status = c.Status;
-      statusCounts[status] = (statusCounts[status] || 0) + 1;
-
-      const date = c.DateFiled;
-      dateCounts[date] = (dateCounts[date] || 0) + 1;
-    });
-
-    const statusLabels = Object.keys(statusCounts);
-    const statusValues = Object.values(statusCounts);
-
-    new Chart(document.getElementById("complaintStatusChart").getContext("2d"), {
-      type: 'bar',
+    statusPieChartInstance = new Chart(document.getElementById("statusPieChart").getContext("2d"), {
+      type: "pie",
       data: {
         labels: statusLabels,
         datasets: [{
-          label: 'Complaints by Status',
           data: statusValues,
-          backgroundColor: ['#f87171', '#60a5fa', '#34d399', '#fbbf24', '#a78bfa'],
-          borderWidth: 1
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
         }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: { beginAtZero: true }
-        }
       }
     });
+  });
 
-    const sortedDates = Object.keys(dateCounts).sort();
-    const counts = sortedDates.map(d => dateCounts[d]);
+  fetch(`http://localhost:8080/api/complaints/getTopDeptCompCount`)
+  .then(res => res.json())
+  .then(data => {
+    const deptContainer = document.getElementById("topDept");
+
+const table = document.createElement("table");
+
+const thead = document.createElement("thead");
+const headRow = document.createElement("tr");
+const query = document.getElementById("query");
+query.innerHTML = "";
+
+headRow.innerHTML = `
+  <th>Department</th>
+  <th>Number of Complaints</th>
+`;
+thead.appendChild(headRow);
+table.appendChild(thead);  
+
+const tbody = document.createElement("tbody");
+data.forEach(row => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${row.deptName}</td>
+    <td>${row.count}</td>
+  `;
+  tbody.appendChild(tr);
+});
+table.appendChild(tbody);   
+
+deptContainer.appendChild(table);
+
+
+  });
+  fetch(`http://localhost:8080/api/complaints/getCompDateCount`)
+  .then(res => res.json())
+  .then(data => {
+    
+    const sortedDates = data.map(c => c.date).sort();
+    const counts = data.map(c => c.count);
 
     new Chart(document.getElementById("complaintsOverTimeChart").getContext("2d"), {
       type: "line",
@@ -64,74 +99,52 @@ fetch(`${apiBase}/Complaints`)
         maintainAspectRatio: false
       }
     });
+  });
 
-    new Chart(document.getElementById("statusPieChart").getContext("2d"), {
-      type: "pie",
-      data: {
-        labels: statusLabels,
-        datasets: [{
-          data: statusValues,
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-        }]
-      }
-    });
-
+  fetch(`http://localhost:8080/api/complaints/getDeptCompCount`)
+  .then(res => res.json())
+  .then(data => {
+    const labels = data.map(d => d.deptName);
+    const values = data.map(d => d.count);
     
-  });
 
-
-Promise.all([
-  fetch(`${apiBase}/Complaints`).then(res => res.json()),
-  fetch(`${apiBase}/Departments`).then(res => res.json())
-]).then(([complaints, departments]) => {
-  const deptMap = {};
-  departments.forEach(d => deptMap[d.DeptID] = d.Name);
-
-  const complaintCounts = {};
-  complaints.forEach(c => {
-    const deptName = deptMap[c.DeptID] || `Dept ${c.DeptID}`;
-    complaintCounts[deptName] = (complaintCounts[deptName] || 0) + 1;
-  });
-
-  const labels = Object.keys(complaintCounts);
-  const values = Object.values(complaintCounts);
-  new Chart(document.getElementById("departmentChart").getContext("2d"), {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Number of Complaints",
-        data: values,
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-        borderRadius: 5
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1
+    new Chart(document.getElementById("departmentChart").getContext("2d"), {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Number of Complaints",
+          data: values,
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+          borderRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
           }
         }
-      },
-      plugins: {
-        legend: {
-          display: false
-        }
       }
-    }
+    });
   });
-});
 }
 
 renderCharts();
 let lastPage = sessionStorage.getItem("lastPageVisited");
-console.log(lastPage);
+// console.log(lastPage);
 if(lastPage === "user"){
     sessionStorage.removeItem("lastPageVisited");
     fetchAndRenderUsers();

@@ -21,6 +21,10 @@
     padding: 0 3rem;
     z-index: 1000;
 }
+#topDept table {
+  margin: 0 auto;
+}
+
 
 .nav-title {
     font-size: 3vh;

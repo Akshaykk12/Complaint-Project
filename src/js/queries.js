@@ -29,7 +29,7 @@ function getQueries(){
 
   <button 
     onclick="fetchComplaintsByDepartment()" 
-    style="padding: 0.5em 1em; background-color: Green; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    style="padding: 0.5em 1em; background-color: #44B78B; color: white; border: none; border-radius: 4px; cursor: pointer;">
     Search
   </button>
 

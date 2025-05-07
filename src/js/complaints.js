@@ -97,10 +97,10 @@ function fetchAndRenderComplaints(){
     const query = document.getElementById("query");
     query.innerHTML = "";
       headRow.innerHTML = `
-        <th>Complaint ID</th>
-        <th>User</th>
-        <th>Department</th>
-        <th>Complaint Type</th>
+        <th style="width: 4vw">Complaint ID</th>
+        <th style="width: 4vw">User</th>
+        <th style="width: 4vw">Department</th>
+        <th style="width: 4vw">Complaint Type</th>
         <th>
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span>Description</span>
@@ -119,28 +119,29 @@ function fetchAndRenderComplaints(){
             <span id="sortArrowStatus" style="font-size: 25px; cursor: pointer;">↕</span>
           </div>
         </th>
-        <th>Actions</th>
+        <th style="width: 7vw; ">Actions</th>
       `;
       thead.appendChild(headRow);
       table.appendChild(thead);
   
       const tbody = document.createElement("tbody");
       data.forEach(row => {
-        const tr = document.createElement("tr");
         const statusClass = row.status.toLowerCase().replace(/\s/g, '-');
-        const statusBadge = `<span class="status-badge ${statusClass}">${row.status}</span>`;
-  
+        const statusBadge = `<span onclick="editStatus('${row.compId}')" class="status-badge ${statusClass}">${row.status}</span>`;
+        
+        const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.compId}</td>
           <td>${userMap[row.userId] || 'Unknown User'}</td>
           <td>${deptMap[row.deptId] || 'Unknown Dept'}</td>
           <td>${ctMap[row.ctId] || 'Unknown Type'}</td>
-          <td>${row.description}</td>
+          <td onclick="chatService('${row.compId}')">${row.description}</td>
           <td>${row.date}</td>
           <td>${statusBadge}</td>
           <td>
             <button onclick="loadComplaint('${row.compId}', '${userMap[row.UserID] || 'Unknown User'}', '${deptMap[row.DeptID] || 'Unknown Dept'}', '${ctMap[row.CTID] || 'Unknown Type'}')">✏️</button>
             <button onclick="deleteComplaint('${row.compId}')">🗑️</button>
+            <button onclick="chatService('${row.compId}')">💬</button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -219,7 +220,7 @@ function fetchAndRenderComplaints(){
     container.innerHTML = `
       <div style="max-width: 800px; margin: 5vh auto; padding: 3vh 4vw; background-color: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
 
-  <h1 style="text-align: center; margin-bottom: 4vh;">Add Complaint</h1>
+  <h1 style="text-align: center; margin-bottom: 4vh;">Complaint</h1>
 
   <!-- Complaint ID -->
   <div style="display: flex; margin-bottom: 2vh;">
@@ -318,9 +319,44 @@ function fetchAndRenderComplaints(){
       .then(data => {
         console.log(data);
         const { compId, ctId, date,deptId, description, status, userId  } = data;
-        editIdCompType = id; // ✅ updated here too
+        editIdCompType = id;
         addComplaint(compId, userId, deptId, ctId, description, date, status);
       });
       sessionStorage.setItem("lastPageVisited", "complaint");
   }
   
+  function chatService(id){
+    const container = document.getElementById("table-container");
+    container.innerHTML = `
+    <div style="display: flex; flex-direction: column; justify-content: space-between; height: 80vh; padding: 10px; ">
+
+        <!-- Chat messages section -->
+        <div style="flex-grow: 1; overflow-y: auto; background-color: #f5f5f5; padding: 10px; border-radius: 10px;">
+            <ul id="messages" style="list-style-type: none; padding: 0; margin: 0;">
+                <!-- Example message block -->
+                <!-- <li style="margin-bottom: 20px;">
+                    <div style="max-width: 60%; background-color: lightgray; border-radius: 10px; padding: 10px;">
+                        Hi !! This is a message from Riya. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </div>
+                    <div style="font-size: 12px; color: gray; margin-top: 5px;">18:06 PM | July 24</div>
+                </li>
+    
+                <li style="margin-bottom: 20px; text-align: right;">
+                    <div style="display: inline-block; max-width: 60%; background-color: #44B78B; border-radius: 10px; padding: 10px; color: white;">
+                        Hi Riya, Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </div>
+                    <div style="font-size: 12px; color: gray; margin-top: 5px;">18:30 PM | July 24</div>
+                </li> -->
+                <!-- Repeat more <li> as needed -->
+            </ul>
+        </div>
+    
+        <!-- Message input section -->
+        <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center;">
+            <input type="text" id="messageInput" placeholder="Enter message" style="flex: 1; max-width: 70%; height: 40px; border-radius: 20px; border: 1px solid #ccc; padding: 0 15px; background-color: #fff; color: black; margin-right: 10px;">
+            <button onclick="sendMessage()" style="padding: 10px 20px; border-radius: 20px; background-color: #44B78B; color: white; cursor: pointer;">Send</button>
+        </div>
+    
+    </div>
+    `;
+  }

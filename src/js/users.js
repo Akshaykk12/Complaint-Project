@@ -1,6 +1,10 @@
 
+
+
 // User
 function fetchAndRenderUsers(){
+  let userBreadCrumb = document.getElementById("secondary-nav");
+userBreadCrumb.innerHTML += `<div onclick:"fetchAndRenderUsers()" style:"cursor: pointer;"> > User </div>`;
     fetch(`${URL}/api/users`)
         .then(res => res.json())
         .then(data => {
@@ -17,6 +21,7 @@ function fetchAndRenderUsers(){
   }
 
   function displayUsersTable(){
+    
     const container = document.getElementById("table-container");
     container.innerHTML = ``;
 

@@ -1,46 +1,110 @@
-let ws, currentUser;
+// let ws, currentUser;
 
-function connect() {
+// function connect() {
+//   currentUser = document.getElementById("name").value;
+//   if (!currentUser) {
+//     alert("Please enter your name before connecting.");
+//     return;
+//   }
 
-  ws = new WebSocket("ws://localhost:8080/hello");
+//   // Pass userId in query param
+//   ws = new WebSocket("ws://localhost:8080/chat?userId=" + encodeURIComponent(currentUser));
 
-  ws.onmessage = function (e) {
-    console.log(e);
-    printMessage(e.data);
-  };
-  document.getElementById("connectButton").disabled = true;
-  document.getElementById("connectButton").value = "Connected";
-  document.getElementById("name").disabled = true;
-  currentUser = document.getElementById("name").value;
-  console.log(currentUser);
+//   ws.onopen = function () {
+//     console.log("Connected as", currentUser);
+//     document.getElementById("connectButton").disabled = true;
+//     document.getElementById("connectButton").value = "Connected";
+//     document.getElementById("name").disabled = true;
+//   };
+
+//   ws.onmessage = function (e) {
+//     let messageData = JSON.parse(e.data);
+//     printMessage(messageData);
+//   };
+  
+
+//   ws.onclose = function () {
+//     console.log("Disconnected");
+//     document.getElementById("connectButton").disabled = false;
+//     document.getElementById("connectButton").value = "Connect";
+//     document.getElementById("name").disabled = false;
+//   };
+// }
+
+// // Print incoming message on browser
+// function printMessage(data) {
+//     let messages = document.getElementById("messages");
+//     let newMessage = document.createElement("div");
+//     newMessage.className = "incoming-message";
+//     newMessage.innerHTML = data.from + " ➔ " + data.to + ": " + data.message;
+//     messages.appendChild(newMessage);
+//   }
+  
+
+// // Send message to specific user
+// function sendToUser() {
+//     if (ws == undefined) return;
+  
+//     let messageText = document.getElementById("message").value;
+//     let name = document.getElementById("name").value;
+//     let targetUser = document.getElementById("targetUser").value;  // <-- NEW FIELD
+  
+//     let messageObject = {
+//       from: name,
+//       to: targetUser,
+//       message: messageText,
+//     };
+  
+//     ws.send(JSON.stringify(messageObject));
+//   }
+  
+
+  // Show own message on screen
+//   let messages = document.getElementById("messages");
+//   let newMessage = document.createElement("div");
+//   newMessage.className = "outgoing-message";
+//   newMessage.innerHTML = `<b>${currentUser}</b> ➔ <b>${targetUser}</b>: ${messageText}`;
+//   messages.appendChild(newMessage);
+
+//   ws.send(JSON.stringify(messageObject));
+// }
+let socket;
+let currentCompId = null;
+
+
+
+function connectToComplaint() {
+    let compId = document.getElementById("compId").value;
+    if (socket) {
+        socket.close();
+        console.log(`Disconnected from complaint ${currentCompId}`);
+    }
+
+    currentCompId = compId;
+    socket = new WebSocket(`ws://localhost:8080/chat?compId=${compId}`);
+
+    socket.onopen = () => {
+        console.log(`Connected to complaint ${compId}`);
+    };
+
+    socket.onmessage = (event) => {
+        const li = document.createElement('li');
+        li.textContent = event.data;
+        document.getElementById('messages').appendChild(li);
+    };
+
+    socket.onclose = () => {
+        console.log(`Socket closed for complaint ${compId}`);
+    };
 }
 
-//This function takes care of printing the message on browser
-function printMessage(data) {
-  let messages = document.getElementById("messages");
-  let messageData = JSON.parse(data);
-  let newMessage = document.createElement("div");
-  newMessage.className = "incoming-message";
-  newMessage.innerHTML = messageData.name + " : " + messageData.message;
-  messages.appendChild(newMessage);
-}
-
-//This function handles functionality of sending the message to websocket
-function sendToGroupChat() {
-  if (ws == undefined) return;
-  let messageText = document.getElementById("message").value;
-  document.getElementById("message").value = "";
-  let name = document.getElementById("name").value;
-  let messageObject = {
-    name: name,
-    message: messageText,
-  };
-
-  let newMessage = document.createElement("div");
-  newMessage.innerHTML = messageText + " : " + currentUser;
-  newMessage.className = "outgoing-message";
-  messages.appendChild(newMessage);
-
-  //In-Built functions Send is used with object we created
-  ws.send(JSON.stringify(messageObject));
+function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const message = input.value;
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(message);
+        input.value = '';
+    } else {
+        console.log('Socket is not connected');
+    }
 }
