@@ -58,9 +58,9 @@
 /* Sidebar */
 .sidebar {
     position: fixed;
-    top: 12vh;
+    top: 8vh;
     left: 0;
-    width: 23%;
+    width: 22.8vw;
     height: 88vh;
     margin-left: 1.5rem;
     border: 1px lightgray solid;

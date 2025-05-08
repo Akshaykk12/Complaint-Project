@@ -18,10 +18,7 @@
 
         </nav>
 
-        <!-- Secondary Navigation Bar -->
-        <nav id="secondary-nav" class="secondary-nav">
-            <div onclick="window.location.href='./admin.html'" style="cursor: pointer;">Home</div>
-        </nav>
+        
 
         <!-- Sidebar -->
         <div class="sidebar">
@@ -38,56 +35,67 @@
             <div class="table-link" onclick="fetchAndRenderComplaintTypes()">Complaint Types</div>
             <div class="table-link" onclick="fetchAndRenderComplaints()">Complaints</div>
             
+            <div class="section-title" id="sidebar-table">MESSAGING</div>
+            <div class="table-link" onclick="fetchAndRenderComplaintsChat()">Complaints</div>
         </div>
     </div>
 
     <!-- Main Body -->
     <div id="main-content" class="main-content">
-      <div id="report"></div>
-      <div id="query"></div>
-      <div id="table-container">
-          
-        <div id="graph">
-          <h1>Dashboard</h1>
-          <div style="padding: 20px;">
-  
-          <div class="chart-grid">
-              <div class="pie-chart-card">
-                <div class="chart-title">Complaints Status</div>
-                <canvas id="statusPieChart"></canvas>
+      <!-- Secondary Navigation Bar -->
+      <nav id="secondary-nav" class="secondary-nav" style="margin-left: 24.6vw;">
+        <div onclick="window.location.href='./admin.html'" style="cursor: pointer;">Home</div>
+    </nav>
+      <!-- Query container (used by query.js) -->
+      <div id="query-container"></div>
+    
+      <!-- Report container (used by reports.js) -->
+      <div id="report-container"></div>
+        <div id="table-container">
+          <div id="graph">
+            <div style="padding: 20px;">
+    
+              <div class="chart-grid">
+                <div class="pie-chart-card">
+                  <div class="chart-title">Complaints Status</div>
+                  <canvas id="statusPieChart"></canvas>
+                </div>
+                <div class="bar-chart-card">
+                  <div class="chart-title">Complaints by Department</div>
+                  <canvas id="departmentChart"></canvas>
+                </div>
               </div>
-              <div class="bar-chart-card">
-                <div class="chart-title">Complaints by Department</div>
-                <canvas id="departmentChart"></canvas>
+    
+              <div class="dashboard-second-row">
+                <div class="mini-stats-column">
+                  <div class="mini-card" id="userCountCard">
+                    <div class="mini-title">Total Users</div>
+                    <div class="mini-value" id="userCount">--</div>
+                  </div>
+                  <div class="mini-card" id="complaintCountCard">
+                    <div class="mini-title">Total Complaints</div>
+                    <div class="mini-value" id="complaintCount">--</div>
+                  </div>
+                </div>
+    
+                <div class="chart-card">
+                  <div class="chart-title">Complaints Over Time</div>
+                  <canvas id="complaintsOverTimeChart"></canvas>
+                </div>
+    
+                <div class="chart-card">
+                  <div class="chart-title">Top 5 Departments</div>
+                  <div id="topDept" width="400" height="200"></div>
+                </div>
               </div>
+    
             </div>
-            
-            <div class="dashboard-second-row">
-              <!-- Column 1: Two small stat cards -->
-              <div class="mini-stats-column">
-                <div class="mini-card" id="userCountCard">
-                  <div class="mini-title">Total Users</div>
-                  <div class="mini-value" id="userCount">--</div>
-                </div>
-                <div class="mini-card" id="complaintCountCard">
-                  <div class="mini-title">Total Complaints</div>
-                  <div class="mini-value" id="complaintCount">--</div>
-                </div>
-              </div>
-              
-              <!-- Column 2: Complaints Over Time (Line Chart) -->
-              <div class="chart-card">
-                <div class="chart-title">Complaints Over Time</div>
-                <canvas id="complaintsOverTimeChart"></canvas>
-              </div>
-              <!-- Column 3: Top Complaint Types (Bar Chart) -->
-              <div class="chart-card">
-                <div class="chart-title">Top 5 Departments </div>
-                <div id="topDept" width="400" height="200"></div>
-              </div>
           </div>
-          </div>
+        </div>
       </div>
+    
+    </div>
+    
   </div>
   
             
@@ -107,6 +115,7 @@
     <script src="../src/js/queries.js"></script>
     <script src="../src/js/reports.js"></script>
     <script src="../src/js/analytics.js" defer></script>
+    <script src="../src/js/message.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 

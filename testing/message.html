@@ -67,7 +67,7 @@
 
             socket.onmessage = (event) => {
                 const message = JSON.parse(event.data);
-
+                console.log(message);
                 
                 if (message.from && message.to && message.content) {
                     if(message.from == "admin"){
@@ -76,6 +76,7 @@
                     <div style="display: inline-block; max-width: 60%; background-color: #44B78B; border-radius: 10px; padding: 10px; color: white;">
                     ${message.content}
                     </div>
+                    
                 </li>
                         `;
                     }

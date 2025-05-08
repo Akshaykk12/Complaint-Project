@@ -4,6 +4,11 @@
 // const { table } = require("console");
 
 function fetchAndRenderComplaints(){
+  let userBreadCrumb = document.getElementById("secondary-nav");
+  userBreadCrumb.innerHTML = `
+  <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+  <div onclick="fetchAndRenderComplaints()" style="cursor: pointer; padding-left: 5px;"> > Complaint </div>
+  `;
   
     fetch(`${URL}/api/complaints`)
         .then(res => res.json())
@@ -94,7 +99,7 @@ function fetchAndRenderComplaints(){
     
     const thead = document.createElement("thead");
     const headRow = document.createElement("tr");
-    const query = document.getElementById("query");
+    const query = document.getElementById("query-container");
     query.innerHTML = "";
       headRow.innerHTML = `
         <th style="width: 4vw">Complaint ID</th>
@@ -324,8 +329,18 @@ function fetchAndRenderComplaints(){
       });
       sessionStorage.setItem("lastPageVisited", "complaint");
   }
+
+  let socket = null;
   
   function chatService(id){
+
+    let userBreadCrumb = document.getElementById("secondary-nav");
+  userBreadCrumb.innerHTML = `
+  <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+  <div onclick="fetchAndRenderComplaintsChat()" style="cursor: pointer; padding-left: 5px;"> > Complaint Messaging </div>
+  <div onclick="fetchAndRenderComplaints()" style="cursor: pointer; padding-left: 5px;"> > Complaint ID ${id} </div>
+  `;
+
     const container = document.getElementById("table-container");
     container.innerHTML = `
     <div style="display: flex; flex-direction: column; justify-content: space-between; height: 80vh; padding: 10px; ">
@@ -354,9 +369,88 @@ function fetchAndRenderComplaints(){
         <!-- Message input section -->
         <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center;">
             <input type="text" id="messageInput" placeholder="Enter message" style="flex: 1; max-width: 70%; height: 40px; border-radius: 20px; border: 1px solid #ccc; padding: 0 15px; background-color: #fff; color: black; margin-right: 10px;">
-            <button onclick="sendMessage()" style="padding: 10px 20px; border-radius: 20px; background-color: #44B78B; color: white; cursor: pointer;">Send</button>
+            <button onclick="sendMessage('${id}')" style="padding: 10px 20px; border-radius: 20px; background-color: #44B78B; color: white; cursor: pointer;">Send</button>
         </div>
     
     </div>
     `;
+    
+        let currentCompId = null;
+    let compId = id;
+            let mesgBox = document.getElementById("messages");
+            mesgBox.innerText = ""; // Clear existing messages
+            if (socket) {
+                socket.close();
+                console.log(`Disconnected from complaint ${currentCompId}`);
+            }
+
+            currentCompId = compId;
+            socket = new WebSocket(`ws://localhost:8080/chat?compId=${compId}`);
+
+            socket.onopen = () => {
+                console.log(`Connected to complaint ${compId}`);
+            };
+
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                console.log(message);
+                
+                if (message.from && message.to && message.content) {
+                    if(message.from == "1"){
+                        mesgBox.innerHTML += `
+                        <li style="margin-bottom: 20px; text-align: right;">
+                    <div style="display: inline-block; max-width: 60%; background-color: #44B78B; border-radius: 10px; padding: 10px; color: white;">
+                    ${message.content}
+                    </div>
+                </li>
+                        `;
+                    }
+                    else if(message.from == "0"){
+                        mesgBox.innerHTML += `
+                            <li style="margin-bottom: 20px;">
+                    <div style="max-width: 60%; background-color: lightgray; border-radius: 10px; padding: 10px;">
+                        ${message.content}
+                    </div>
+                </li>
+                        `;
+                    }
+                    // const li = document.createElement('li');
+                    // li.textContent = `${message.from} ➔ ${message.to}: ${message.content}`;
+                    // document.getElementById('messages').appendChild(li);
+                } else {
+                    console.error('Invalid message format:', message);
+                }
+                
+            };
+
+            socket.onclose = () => {
+                console.log(`Socket closed for complaint ${compId}`);
+            };
+
+            socket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+            
+    
+    
   }
+  function sendMessage(currentCompId) {
+    const input = document.getElementById('messageInput');
+    const messageText = input.value;
+    const message = {
+        from: "1",    // You can change this as per your use case
+        to: `0`,       // Assuming 'to' should be formatted like "CompID"
+        content: messageText,
+        compId: currentCompId
+    };
+
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify(message));
+        input.value = ''; // Clear the input field after sending
+    } else {
+        console.log('Socket is not connected');
+    }
+}
+  
+
+        

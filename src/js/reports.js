@@ -1,33 +1,84 @@
 function loadReport() {
-  const container = document.getElementById("query");
-  const report = document.getElementById("report");
-  
-  report.innerHTML = `
-      <h1> Complaints Report </h1>
-      <div class="card-container">
-          <div class="card">
+  // Get the containers
+  const queryContainer = document.getElementById("query-container");
+  const reportContainer = document.getElementById("report-container");
+  const tableContainer = document.getElementById("table-container");
+  // if(tableContainer) tableContainer.innerHTML = "";
+
+  // Clear the query container (optional: if you want to hide query UI when showing report)
+  if (queryContainer) queryContainer.innerHTML = "";
+
+  // Clear the report container (to reset content)
+  // if (reportContainer) reportContainer.innerHTML = "";
+
+  // Add the report content
+  queryContainer.innerHTML = `
+    <h1> Complaints Report </h1>
+    <div class="card-container">
+        <div class="card">
           <h3>Total Users</h3>
           <p id="usersCount">Loading...</p>
-          </div>
-          <div class="card">
+        </div>
+        <div class="card">
           <h3>Total Departments</h3>
           <p id="departmentsCount">Loading...</p>
-          </div>
-          <div class="card">
+        </div>
+        <div class="card">
           <h3>Total Complaints</h3>
           <p id="complaintsCount">Loading...</p>
+        </div>
+    </div>
+    <div id="table-container">
+      <h1>Insights</h1>
+      <div id="graph">
+        <div style="padding: 20px;">
+          <div class="chart-grid">
+            <div class="pie-chart-card">
+              <div class="chart-title">Complaints Status</div>
+              <canvas id="statusPieChart"></canvas>
+            </div>
+            <div class="bar-chart-card">
+              <div class="chart-title">Complaints by Department</div>
+              <canvas id="departmentChart"></canvas>
+            </div>
           </div>
+
+          <div class="dashboard-second-row">
+            <div class="mini-stats-column">
+              <div class="mini-card" id="userCountCard">
+                <div class="mini-title">Total Users</div>
+                <div class="mini-value" id="userCount">--</div>
+              </div>
+              <div class="mini-card" id="complaintCountCard">
+                <div class="mini-title">Total Complaints</div>
+                <div class="mini-value" id="complaintCount">--</div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">Complaints Over Time</div>
+              <canvas id="complaintsOverTimeChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">Top 5 Departments</div>
+              <div id="topDept" width="400" height="200"></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-          <h1>Insights</h1>
-      </div>
+    </div>
+    <button id="cmd" onclick="downloadPDF()" style="background-color: #44B78B; color:white; height: 4vh; padding: 0 1vw; border: none; border-radius: 4px; font-size: 1em; cursor: pointer; margin: 10px">
+              Download as PDF
+      </button>
   `;
-  report.appendChild(container);
-
-  container.innerHTML = "";
-
+  // const graph = document.getElementById("graph");
+  // graph.innerHTML = "";
+  // Call any functions to render charts / fetch data
+  renderCharts();
   loadCounts();
 }
+
 
 
 

@@ -2,6 +2,11 @@
 // Department
 
 function fetchAndRenderDepartments(){
+  let userBreadCrumb = document.getElementById("secondary-nav");
+  userBreadCrumb.innerHTML = `
+    <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+    <div onclick="fetchAndRenderDepartments()" style="cursor: pointer; padding-left: 5px;"> > Department </div>
+  `;
     fetch(`${URL}/api/departments`)
         .then(res => res.json())
         .then(data => {
@@ -70,7 +75,7 @@ function fetchAndRenderDepartments(){
   
       const thead = document.createElement("thead");
       const headRow = document.createElement("tr");
-      const query = document.getElementById("query");
+      const query = document.getElementById("query-container");
     query.innerHTML = "";
       headRow.innerHTML = `
         <th>Department</th>
@@ -107,16 +112,25 @@ function fetchAndRenderDepartments(){
   
   function renderDepartments(data) {
   
+    // Check if search elements exist before modifying them
     const search1 = document.getElementById("search-1");
     const search2 = document.getElementById("search-2");
     const search3 = document.getElementById("search-3");
     const search4 = document.getElementById("search-4");
-    search1.innerHTML = "";
-    search2.innerHTML = "";
-    search3.innerHTML = "";
-    search4.innerHTML = "";
+
+    if (search1) search1.innerHTML = "";
+    if (search2) search2.innerHTML = "";
+    if (search3) search3.innerHTML = "";
+    if (search4) search4.innerHTML = "";
   
     const container = document.getElementById("table-container");
+
+    // Ensure the container exists
+    if (!container) {
+      console.error("Table container with id 'table-container' not found!");
+      return;
+    }
+
     container.innerHTML = `
       <div style="text-align: right;">
           <button onclick="addDepartment()" style="background-color: #44B78B; color:white; height: 4vh; padding: 0 1vw; border: none; border-radius: 4px; font-size: 1em; cursor: pointer;">
@@ -131,16 +145,22 @@ function fetchAndRenderDepartments(){
       container.appendChild(title);
       container.appendChild(displayDepartments(data));
     }
+
     const sortArrowDname = document.getElementById("sortArrowDname");
-    sortArrowDname.addEventListener("click", () => {
-      const sorted = [...allDepartments].sort((a, b) =>
-          a.deptName.localeCompare(b.deptName) * sortedDirectionDept
-      );
-      
-      sortedDirectionDept *= -1;
-      renderDepartments(sorted);
-    });
-  }
+
+    // Ensure the sortArrowDname element exists before adding event listener
+    if (sortArrowDname) {
+      sortArrowDname.addEventListener("click", () => {
+        const sorted = [...allDepartments].sort((a, b) =>
+            a.deptName.localeCompare(b.deptName) * sortedDirectionDept
+        );
+        
+        sortedDirectionDept *= -1;
+        renderDepartments(sorted);
+      });
+    }
+}
+
   
   function deleteDepartment(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
@@ -154,9 +174,36 @@ function fetchAndRenderDepartments(){
   }
   
   function addDepartment(name = "", email = "", deptId = "") {
+    if(deptId === ""){
+
+      let userBreadCrumb = document.getElementById("secondary-nav");
+      userBreadCrumb.innerHTML = `
+        <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+        <div onclick="fetchAndRenderDepartments()" style="cursor: pointer; padding-left: 5px;"> > Department </div>
+        <div onclick="addDepartment()" style="cursor: pointer; padding-left: 5px;"> > Add Department </div>
+      `;
+
+      const container = document.getElementById("table-container");
+      container.innerHTML = `
+        <h1 style="text-align: center; color: #2c3e50;">Add Departments</h1>`;
+    }
+    
+    else{
+
+      let userBreadCrumb = document.getElementById("secondary-nav");
+      userBreadCrumb.innerHTML = `
+        <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+        <div onclick="fetchAndRenderDepartments()" style="cursor: pointer; padding-left: 5px;"> > Department </div>
+        <div onclick="addDepartment()" style="cursor: pointer; padding-left: 5px;"> > Edit Department </div>
+      `;
+    
+      const container = document.getElementById("table-container");
+      container.innerHTML = `
+        <h1 style="text-align: center; color: #2c3e50;">Edit Departments</h1>`;
+    
+    }
     const container = document.getElementById("table-container");
-    container.innerHTML = `
-      <h1 style="text-align: center; color: #2c3e50;">Add Departments</h1>
+       container.innerHTML += `
       <div style="margin-top: 3vh; padding: 2vh;">
           <div style="display: flex; align-items: center; margin-bottom: 2vh; font-size: 1.1em;">
               <div style="min-width: 20vw; margin-right: 10px;">Department Name:</div>

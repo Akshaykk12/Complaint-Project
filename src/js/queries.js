@@ -11,9 +11,11 @@ function loadDepartments(){
 }
 
 function getQueries(){
-    const container = document.getElementById("query");
-    const graph = document.getElementById("table-container");
-    if(graph) graph.innerHTML = "";
+  const container = document.getElementById("query-container");
+  // const graph = document.getElementById("graph");
+  // graph.innerHTML = "";
+  const cont = document.getElementById("table-container");
+  if(cont) cont.innerHTML = "";
     container.innerHTML = `
     <div id="main-container" style="padding: 20px; max-width: 600px; margin: auto;">
   <h2 style="margin-bottom: 1em;">Query Complaints by Department</h2>

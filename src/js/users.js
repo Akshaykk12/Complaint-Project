@@ -4,7 +4,10 @@
 // User
 function fetchAndRenderUsers(){
   let userBreadCrumb = document.getElementById("secondary-nav");
-userBreadCrumb.innerHTML += `<div onclick:"fetchAndRenderUsers()" style:"cursor: pointer;"> > User </div>`;
+  userBreadCrumb.innerHTML = `
+  <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+  <div onclick:"fetchAndRenderUsers()" style="cursor: pointer; padding-left: 5px;"> > User </div>
+  `;
     fetch(`${URL}/api/users`)
         .then(res => res.json())
         .then(data => {
@@ -71,7 +74,7 @@ userBreadCrumb.innerHTML += `<div onclick:"fetchAndRenderUsers()" style:"cursor:
   
       const thead = document.createElement("thead");
       const headRow = document.createElement("tr");
-      const query = document.getElementById("query");
+      const query = document.getElementById("query-container");
       query.innerHTML = "";
       headRow.innerHTML = `
         <th>User ID</th>
@@ -126,14 +129,23 @@ userBreadCrumb.innerHTML += `<div onclick:"fetchAndRenderUsers()" style:"cursor:
     const search2 = document.getElementById("search-2");
     const search3 = document.getElementById("search-3");
     const search4 = document.getElementById("search-4");
+  
     if (search1) search1.innerHTML = "";
     if (search2) search2.innerHTML = "";
     if (search3) search3.innerHTML = "";
     if (search4) search4.innerHTML = "";
-
   
     const container = document.getElementById("table-container");
-    if (container) container.innerHTML = '';
+    
+  // const reportContainer = document.getElementById("report-container");
+  // reportContainer.innerText = "";
+    // Check if the container exists
+    if (!container) {
+      console.error("Table container with id 'table-main' not found!");
+      return;
+    }
+  
+    container.innerHTML = '';  // Clear previous content
   
     if (Array.isArray(data) && data.length > 0) {
       const title = document.createElement("h1");
@@ -141,14 +153,17 @@ userBreadCrumb.innerHTML += `<div onclick:"fetchAndRenderUsers()" style:"cursor:
       container.appendChild(title);
       container.appendChild(displayUsers(data));
     }
+  
     const sortArrowName = document.getElementById("sortArrowName");
   
-    sortArrowName.addEventListener("click", () => {
-      const sorted = [...allUsers].sort((a, b) =>
+    if (sortArrowName) {
+      sortArrowName.addEventListener("click", () => {
+        const sorted = [...allUsers].sort((a, b) =>
           a.name.localeCompare(b.name) * sortedDirectionUser
-      );
-      
-      sortedDirectionUser *= -1;
-      renderUsers(sorted);
-    });
+        );
+        sortedDirectionUser *= -1;
+        renderUsers(sorted);
+      });
+    }
   }
+  

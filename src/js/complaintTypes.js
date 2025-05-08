@@ -2,6 +2,12 @@
 // Complaint Type
 
 function fetchAndRenderComplaintTypes(){
+  
+  let userBreadCrumb = document.getElementById("secondary-nav");
+  userBreadCrumb.innerHTML = `
+    <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+    <div onclick="fetchAndRenderComplaintTypes()" style="cursor: pointer; padding-left: 5px;"> > Complaint Type </div>
+  `;
     fetch(`${URL}/api/complaint-types`)
         .then(res => res.json())
         .then(data => {
@@ -76,7 +82,7 @@ function fetchAndRenderComplaintTypes(){
   
       const thead = document.createElement("thead");
       const headRow = document.createElement("tr");
-      const query = document.getElementById("query");
+      const query = document.getElementById("query-container");
     query.innerHTML = "";
       headRow.innerHTML = `
         <th>Complaint Type ID</th>
@@ -179,9 +185,33 @@ function fetchAndRenderComplaintTypes(){
   }
   
   function addComplaintType(complaintType = "", severity = "", ctID = "") {
+
+    if(ctID === ""){
+      let userBreadCrumb = document.getElementById("secondary-nav");
+      userBreadCrumb.innerHTML = `
+        <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+        <div onclick="fetchAndRenderComplaintTypes()" style="cursor: pointer; padding-left: 5px;"> > Complaint Type </div>
+        <div onclick="addComplaintType()" style="cursor: pointer; padding-left: 5px;"> > Add Complaint Type </div>
+      `;
+      const container = document.getElementById("table-container");
+      container.innerHTML = `
+        <h1 style="text-align: center; color: #2c3e50;">Add Complaint Types</h1>`;
+    }
+
+    else{
+      let userBreadCrumb = document.getElementById("secondary-nav");
+      userBreadCrumb.innerHTML = `
+        <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
+        <div onclick="fetchAndRenderComplaintTypes()" style="cursor: pointer; padding-left: 5px;"> > Complaint Type </div>
+        <div onclick="addComplaintType()" style="cursor: pointer; padding-left: 5px;"> > Edit Complaint Type </div>
+      `;
+      const container = document.getElementById("table-container");
+      container.innerHTML = `
+        <h1 style="text-align: center; color: #2c3e50;">Edit Complaint Types</h1>`;
+    }
+
     const container = document.getElementById("table-container");
-    container.innerHTML = `
-      <h1 style="text-align: center; color: #2c3e50;">Add Complaint Types</h1>
+      container.innerHTML += `
   <div style="margin-top: 3vh; padding: 2vh;">
       <div style="display: flex; align-items: center; margin-bottom: 2vh; font-size: 1.1em;">
           <div style="min-width: 20vw; margin-right: 10px;">Complaint Type:</div>
