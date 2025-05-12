@@ -8,7 +8,12 @@ function fetchAndRenderComplaintTypes(){
     <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
     <div onclick="fetchAndRenderComplaintTypes()" style="cursor: pointer; padding-left: 5px;"> > Complaint Type </div>
   `;
-    fetch(`${URL}/api/complaint-types`)
+    fetch(`${URL}/api/complaint-types`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
         .then(res => res.json())
         .then(data => {
             allComplaintTypes = data;
@@ -176,8 +181,11 @@ function fetchAndRenderComplaintTypes(){
   function deleteComplaintType(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
         fetch(`${URL}/api/complaint-types/${id}`, {
-            method: "DELETE"
-        })
+            method: "DELETE",
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
         .then(() => fetchAndRenderComplaintTypes())
         .catch(err => console.error("Delete failed:", err));
         sessionStorage.setItem("lastPageVisited", "complaintType");
@@ -258,7 +266,10 @@ function fetchAndRenderComplaintTypes(){
     if (editIdCompType) {
       fetch(`${URL}/api/complaint-types/${editIdCompType}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}`
+  },
         body: JSON.stringify(complaintTypes)
       }).then(() => {
         fetchAndRenderComplaintTypes();
@@ -270,7 +281,10 @@ function fetchAndRenderComplaintTypes(){
   
       fetch(`${URL}/api/complaint-types`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  },
         body: JSON.stringify(complaintTypes)
       }).then(response => {
         if(response.status === 409){
@@ -287,8 +301,11 @@ function fetchAndRenderComplaintTypes(){
   
   function loadComplaintType(id) {
     fetch(`${URL}/api/complaint-types/${id}`, {
-      method: "GET"
-    })
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
       .then(res => res.json())
       .then(data => {
         const { compTypeId, compType, severity } = data;

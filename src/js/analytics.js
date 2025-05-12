@@ -4,14 +4,24 @@ let statusPieChartInstance = null;
 function renderCharts(){
   
     
-  fetch(`http://localhost:8080/api/users/getTotalUsers`)
+  fetch(`http://localhost:8080/api/users/getTotalUsers`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
   .then(res => res.text())
   .then(data => {
 
     document.getElementById("userCount").textContent = data
   });
 
-  fetch(`http://localhost:8080/api/complaints/getTotalComp`)
+  fetch(`http://localhost:8080/api/complaints/getTotalComp`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
   .then(res => res.text())
   .then(data => {
     
@@ -19,7 +29,12 @@ function renderCharts(){
   });
 
   
-fetch(`http://localhost:8080/api/complaints/getCompStatusCount`)
+fetch(`http://localhost:8080/api/complaints/getCompStatusCount`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
 .then(res => res.json())
 .then(data => {
   const statusLabels = data.map(c => c.status);
@@ -41,7 +56,12 @@ fetch(`http://localhost:8080/api/complaints/getCompStatusCount`)
   });
 });
 
-  fetch(`http://localhost:8080/api/complaints/getTopDeptCompCount`)
+  fetch(`http://localhost:8080/api/complaints/getTopDeptCompCount`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
   .then(res => res.json())
   .then(data => {
     const deptContainer = document.getElementById("topDept");
@@ -77,7 +97,12 @@ deptContainer.appendChild(table);
   });
   let complaintsOverTimeChartInstance = null; // declare globally
 
-fetch(`http://localhost:8080/api/complaints/getCompDateCount`)
+fetch(`http://localhost:8080/api/complaints/getCompDateCount`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
   .then(res => res.json())
   .then(data => {
     
@@ -113,7 +138,12 @@ fetch(`http://localhost:8080/api/complaints/getCompDateCount`)
 
   let departmentChartInstance = null; // Declare globally
 
-fetch(`http://localhost:8080/api/complaints/getDeptCompCount`)
+fetch(`http://localhost:8080/api/complaints/getDeptCompCount`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
   .then(res => res.json())
   .then(data => {
     const labels = data.map(d => d.deptName);

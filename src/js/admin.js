@@ -9,10 +9,17 @@ let compTypCounter = 10;
 
 let editIdDept = null;
 let editIdCompType = null;
+const token = localStorage.getItem("token");
 
 // Load all the data
 
-fetch(`${URL}/api/users`)
+fetch(`${URL}/api/users`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }
+})
       .then(res => res.json())
       .then(data => {
           allUsers = data;
@@ -21,7 +28,13 @@ fetch(`${URL}/api/users`)
           console.error("Error fetching data:", err);
       });
 
-fetch(`${URL}/api/departments`)
+fetch(`${URL}/api/departments`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }
+  })
       .then(res => res.json())
       .then(data => {
           allDepartments = data;
@@ -30,7 +43,13 @@ fetch(`${URL}/api/departments`)
           console.error("Error fetching data:", err);
       });
 
-fetch(`${URL}/api/complaint-types`)
+fetch(`${URL}/api/complaint-types`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }
+})
       .then(res => res.json())
       .then(data => {
           allComplaintTypes = data;
@@ -39,7 +58,13 @@ fetch(`${URL}/api/complaint-types`)
           console.error("Error fetching data:", err);
       });
 
-fetch(`${URL}/api/complaints`)
+fetch(`${URL}/api/complaints`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }
+})
       .then(res => res.json())
       .then(data => {
           allComplaints = data;

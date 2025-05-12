@@ -1,6 +1,11 @@
 
 function loadDepartments(){
-    fetch(`http://localhost:8080/api/departments/deptName`)
+    fetch(`http://localhost:8080/api/departments/deptName`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
     .then(res => res.json())
     .then(data => {
         const deptSelect = document.getElementById("deptQuery");
@@ -11,6 +16,21 @@ function loadDepartments(){
 }
 
 function getQueries(){
+
+  const search1 = document.getElementById("search-1");
+  search1.innerHTML="";
+
+    const search2 = document.getElementById("search-2");
+    search2.innerHTML="";
+    
+    const search3 = document.getElementById("search-3");
+    search3.innerHTML="";
+    
+    const search4 = document.getElementById("search-4");
+    search4.innerHTML="";
+
+  
+
   const container = document.getElementById("query-container");
   // const graph = document.getElementById("graph");
   // graph.innerHTML = "";
@@ -53,7 +73,12 @@ function fetchComplaintsByDepartment() {
     return;
   }
 
-  fetch(`${URL}/api/complaints/getCompByDept/${deptId}`)
+  fetch(`${URL}/api/complaints/getCompByDept/${deptId}`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
     .then(res => res.json())
     .then(complaints => {
       if (!Array.isArray(complaints) || complaints.length === 0) {

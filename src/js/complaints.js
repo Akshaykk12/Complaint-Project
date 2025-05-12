@@ -10,7 +10,13 @@ function fetchAndRenderComplaints(){
   <div onclick="fetchAndRenderComplaints()" style="cursor: pointer; padding-left: 5px;"> > Complaint </div>
   `;
   
-    fetch(`${URL}/api/complaints`)
+    fetch(`${URL}/api/complaints`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }
+})
         .then(res => res.json())
         .then(data => {
             allComplaints = data;
@@ -82,7 +88,12 @@ function fetchAndRenderComplaints(){
   }
   
   function displayComplaints(data){
-    fetch(`${URL}/api/users/form-data`)
+    fetch(`${URL}/api/users/form-data`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
 .then(res => res.json())
 .then(data => {
     console.log(data);
@@ -158,8 +169,11 @@ function fetchAndRenderComplaints(){
   function deleteComplaint(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
         fetch(`${URL}/api/complaints/${id}`, {
-            method: "DELETE"
-        })
+          method: "DELETE",
+      headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` 
+        }})
         .then(() => fetchAndRenderComplaints())
         .catch(err => console.error("Delete failed:", err));
         sessionStorage.setItem("lastPageVisited", "complaint");
@@ -305,8 +319,11 @@ function fetchAndRenderComplaints(){
   
     if (editIdCompType) {
       fetch(`${URL}/api/complaints/${editIdCompType}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        method: "PUT", // or 'POST', 'PUT', etc.
+        headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // key part
+        },
         body: JSON.stringify(complaint)
       }).then(() => {
         fetchAndRenderComplaints();
@@ -317,9 +334,12 @@ function fetchAndRenderComplaints(){
   }
   
   function loadComplaint(id, user, dept, ctId) {
-    fetch(`${URL}/api/complaints/${id}`, {
-      method: "GET"
-    })
+    fetch(`${URL}/api/complaints/${id}`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
       .then(res => res.json())
       .then(data => {
         console.log(data);
@@ -375,17 +395,49 @@ function fetchAndRenderComplaints(){
     </div>
     `;
     
-        let currentCompId = null;
+    let currentCompId = null;
     let compId = id;
             let mesgBox = document.getElementById("messages");
-            mesgBox.innerText = ""; // Clear existing messages
+            fetch(`http://localhost:8080/api/complaints/${compId}`,{
+              method: 'GET', // or 'POST', 'PUT', etc.
+              headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}` // key part
+              }})
+            .then(res => res.json())
+            .then(data => {
+              fetch(`http://localhost:8080/api/complaints/resource/${data.proofImage}`,{
+                method: 'GET', // or 'POST', 'PUT', etc.
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // key part
+                }})
+                .then(response => response.blob())
+                .then(blob => {
+                  const reader = new FileReader();
+                  reader.onloadend = function() {
+                    const imageUrl = reader.result; 
+                    mesgBox.innerHTML += `
+                      <li style="margin-bottom: 20px; display: flex; align-items: center; gap: 20px;">
+                      <div style="flex: 1; background-color: #f0f0f0; border-radius: 10px; padding: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                      <img src="${imageUrl}" style="max-width: 10vw; height: auto; border-radius: 10px; object-fit: cover;"> 
+                  ${data.description}
+                </div>
+              </li>
+
+      `;
+    };
+    reader.readAsDataURL(blob);
+
+
+            
             if (socket) {
                 socket.close();
                 console.log(`Disconnected from complaint ${currentCompId}`);
             }
 
             currentCompId = compId;
-            socket = new WebSocket(`ws://localhost:8080/chat?compId=${compId}`);
+            socket = new WebSocket(`ws://localhost:8080/chat?compId=${compId}&token=${token}`);
 
             socket.onopen = () => {
                 console.log(`Connected to complaint ${compId}`);
@@ -397,7 +449,7 @@ function fetchAndRenderComplaints(){
                 
                 if (message.from && message.to && message.content) {
                     if(message.from == "1"){
-                        mesgBox.innerHTML += `
+                      mesgBox.innerHTML += `
                         <li style="margin-bottom: 20px; text-align: right;">
                     <div style="display: inline-block; max-width: 60%; background-color: #44B78B; border-radius: 10px; padding: 10px; color: white;">
                     ${message.content}
@@ -430,8 +482,8 @@ function fetchAndRenderComplaints(){
             socket.onerror = (error) => {
                 console.error('WebSocket error:', error);
             };
-            
-    
+          })
+        })
     
   }
   function sendMessage(currentCompId) {

@@ -36,12 +36,12 @@ function validateEmail() {
       name: name,
       email: email,
       phone: Number(phone),
-      userType: "Customer",
+      userType: "USER",
       password: pass,
     };
     console.log(user);
 
-    fetch(`${URL}/api/checkEmail`, {
+    fetch(`${URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),

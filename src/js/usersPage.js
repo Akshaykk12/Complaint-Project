@@ -1,6 +1,9 @@
 let greetBox = document.getElementById("greet");
 const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
 
+// const token = sessionStorage.getItem("token");
+const token = localStorage.getItem("token");
+
 if (loggedInUser) {
   greetBox.innerHTML = `WELCOME, ${loggedInUser.Name}`; 
 } else {
@@ -32,10 +35,9 @@ function fileComplaint() {
             <textarea id="comId" placeholder="Enter Description" rows="4" cols="50"></textarea>
         </div>
 
-        <div class="complaint-input-group">
-            <label for="comDate">Date</label>
-            <input id="comDate" type="date">
-        </div>
+        <input type="file" id="myFile" name="filename">
+
+        <div id="error-box"></div>
 
         <button type="button" id="submit" onclick="addComplaint()">File Complaint</button>
     </form>
@@ -51,8 +53,15 @@ function fileComplaint() {
 const URL = "http://localhost:8080";
 let departments = [];
 let complaintType = [];
+console.log(`Bearer ${token}`);
 
-fetch(`${URL}/api/users/form-data`)
+fetch(`${URL}/api/users/form-data`,{
+    method: 'GET', // or 'POST', 'PUT', etc.
+    headers: {
+    'Content-Type': 'application/json',
+        'Authorization':  `Bearer ${token}`, 
+    }
+})
 .then(res => res.json())
 .then(data => {
     departments = data.departments;
@@ -75,47 +84,77 @@ function loadComplaintType(){
     });
 }
 
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (err) {
+        return null;
+    }
+}
+console.log(getUserId());
 
 let counter = 2011;
 
 function addComplaint() {
     const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
-    const deptId = document.getElementById("deptId").value;
-    const compId = document.getElementById("compId").value;
-    const description = document.getElementById("comId").value;
+const deptId = document.getElementById("deptId").value;
+const compId = document.getElementById("compId").value;
+const description = document.getElementById("comId").value;
+const proofImageInput = document.getElementById("myFile");
+const error = document.getElementById("error-box");
 
-    if (!deptId || !compId || !description || !loggedInUser) {
-        alert("Please fill all fields and make sure you're logged in.");
-        return;
-    }
-    const complaint = {
-        userId: loggedInUser.id,  
-        deptId: deptId,
-        ctId: compId,
-        description: description,
-        status: "Pending"
-    };
+if (!deptId || !compId || !description || !loggedInUser) {
+    alert("Please fill all fields and make sure you're logged in.");
+    return;
+}
 
-    fetch(`${URL}/api/complaints`, {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(complaint)
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Failed to log complaint.");
+if (!proofImageInput.files || proofImageInput.files.length === 0) {
+    alert("Please upload a proof image.");
+    return;
+}
+// console.log(loggedInUser.id);
+const formData = new FormData();
+formData.append("userId", getUserId());
+formData.append("deptId", deptId);
+formData.append("ctId", compId);
+formData.append("description", description);
+formData.append("status", "Pending");
+formData.append("date", "2025-05-09");
+formData.append("updateDate", "2025-05-09");
+formData.append("proofImage", proofImageInput.files[0]);
+
+fetch(`${URL}/api/complaints`, {
+    method: 'POST',
+    headers: {
+        'Authorization': `Bearer ${token}`
+    },
+    body: formData
+})
+.then(res => {
+    if (res.status === 413) {
+        error.textContent = "Image size is too big";
+    } else if (!res.ok) {
+        console.log(res.status);
+        throw new Error("Bad request");
+    } else {
         return res.json();
-    })
-    .then(() => {
-        counter++;
-        alert("Complaint logged successfully!");
-        document.getElementById("empForm").reset(); 
-       
-    })
-    .catch(err => {
-        console.error("Error:", err);
-        alert("Something went wrong while filing the complaint.");
-    });
-    sessionStorage.setItem("lastPageVisited", "fileComplaint");
+    }
+})
+.then(() => {
+    alert("Complaint logged successfully!");
+    document.getElementById("empForm").reset();
+})
+.catch(err => {
+    console.error("Error:", err);
+    alert("Something went wrong while filing the complaint.");
+});
+
+sessionStorage.setItem("lastPageVisited", "fileComplaint");
 }
 
 function getDeptName(deptID) {
@@ -148,11 +187,16 @@ function showComplaints(){
             </tbody>
         </table>
     `;
-
-    fetch(`${URL}/api/complaints`)
+    const userId = getUserId();
+    fetch(`${URL}/api/complaints/getByUserId/${userId}`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
         .then(res => res.json())
-        .then(complaints => {
-            const userComplaints = complaints.filter(c => c.userId === loggedInUser.id);
+        .then(userComplaints => {
+            // const userComplaints = complaints.filter(c => c.userId === loggedInUser.id);
 
             if (userComplaints.length === 0) {
                 document.getElementById("complaintTableBody").innerHTML = `
@@ -161,7 +205,7 @@ function showComplaints(){
             }
 
             const rows = userComplaints.map(c => `
-                <tr>
+                <tr onclick="chatService('${c.compId}')">
                     <td>${getDeptName(c.deptId)}</td>
                     <td>${getComplaintTypeName(c.ctId)}</td>
                     <td>${c.description}</td>
@@ -186,7 +230,11 @@ function deleteComplaint(id) {
     console.log(id);
     if (confirm("Are you sure you wanna delete the data?")) {
         fetch(`${URL}/api/complaints/${id}`, {
-            method: "DELETE"
+            method: "DELETE",
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  },
         })
         .then(response => {
             if (!response.ok) {
@@ -238,7 +286,36 @@ function deleteComplaint(id) {
         let currentCompId = null;
     let compId = id;
             let mesgBox = document.getElementById("messages");
-            mesgBox.innerText = ""; // Clear existing messages
+            fetch(`http://localhost:8080/api/complaints/${compId}`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
+            .then(res => res.json())
+            .then(data => {
+              fetch(`http://localhost:8080/api/complaints/resource/${data.proofImage}`,{
+                method: 'GET', // or 'POST', 'PUT', etc.
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // key part
+                }})
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onloadend = function() {
+                    const imageUrl = reader.result; 
+                    mesgBox.innerHTML += `
+                        <li style="margin-bottom: 20px; display: flex; align-items: center; gap: 20px;">
+                        <div style="flex: 1; background-color: #f0f0f0; border-radius: 10px; padding: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                        <img src="${imageUrl}" style="max-width: 10vw; height: auto; border-radius: 10px; object-fit: cover;"> 
+                    ${data.description}
+                </div>
+                </li>
+
+      `;
+    };
+    reader.readAsDataURL(blob);
             if (socket) {
                 socket.close();
                 console.log(`Disconnected from complaint ${currentCompId}`);
@@ -274,9 +351,6 @@ function deleteComplaint(id) {
                 </li>
                         `;
                     }
-                    // const li = document.createElement('li');
-                    // li.textContent = `${message.from} ➔ ${message.to}: ${message.content}`;
-                    // document.getElementById('messages').appendChild(li);
                 } else {
                     console.error('Invalid message format:', message);
                 }
@@ -290,8 +364,8 @@ function deleteComplaint(id) {
             socket.onerror = (error) => {
                 console.error('WebSocket error:', error);
             };
-            
-    
+        });
+            });
   }
   
   function sendMessage(currentCompId) {

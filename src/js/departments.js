@@ -7,7 +7,12 @@ function fetchAndRenderDepartments(){
     <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
     <div onclick="fetchAndRenderDepartments()" style="cursor: pointer; padding-left: 5px;"> > Department </div>
   `;
-    fetch(`${URL}/api/departments`)
+    fetch(`${URL}/api/departments`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
         .then(res => res.json())
         .then(data => {
             allDepartments = data;
@@ -165,7 +170,11 @@ function fetchAndRenderDepartments(){
   function deleteDepartment(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
         fetch(`${URL}/api/departments/${id}`, {
-            method: "DELETE"
+            method: "DELETE",
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }
         })
         .then(() => fetchAndRenderDepartments())
         .catch(err => console.error("Delete failed:", err));
@@ -245,7 +254,10 @@ function fetchAndRenderDepartments(){
     if (editIdDept) {
       fetch(`${URL}/api/departments/${editIdDept}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  },
         body: JSON.stringify(department)
       }).then(() => {
         fetchAndRenderDepartments();
@@ -257,7 +269,10 @@ function fetchAndRenderDepartments(){
   
       fetch(`${URL}/api/departments`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  },
         body: JSON.stringify(department)
       })
       .then(response => {
@@ -275,8 +290,11 @@ function fetchAndRenderDepartments(){
   
   function loadDepartment(id) {
     fetch(`${URL}/api/departments/${id}`, {
-      method: "GET"
-    })
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
       .then(res => res.json())
       .then(data => {
         const { deptId, deptName, deptEmail } = data;

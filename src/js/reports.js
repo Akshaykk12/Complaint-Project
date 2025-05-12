@@ -87,10 +87,30 @@ function loadReport() {
     async function loadCounts() {
       try {
         const [users, departments, complaints, resolved] = await Promise.all([
-          fetch(`${URL}/api/users`).then(res => res.json()),
-          fetch(`${URL}/api/departments`).then(res => res.json()),
-          fetch(`${URL}/api/complaints`).then(res => res.json()),
-          fetch(`${URL}/api/complaints?status=resolved`).then(res => res.json()),
+          fetch(`${URL}/api/users`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }}).then(res => res.json()),
+          fetch(`${URL}/api/departments`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }}).then(res => res.json()),
+          fetch(`${URL}/api/complaints`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }}).then(res => res.json()),
+          fetch(`${URL}/api/complaints?status=resolved`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }}).then(res => res.json()),
         ]);
 
         document.getElementById("usersCount").textContent = users.length;
@@ -104,7 +124,7 @@ function loadReport() {
     }
 
     async function downloadPDF() {
-        const container = document.getElementById('query');     
+        const container = document.getElementById('query-container');     
         const canvas = await html2canvas(container);
     
         const imgData = canvas.toDataURL('image/png');

@@ -8,7 +8,12 @@ function fetchAndRenderUsers(){
   <div onclick="window.location.href='./admin.html'" style="cursor: pointer; padding-left: 5px;">Home</div>
   <div onclick:"fetchAndRenderUsers()" style="cursor: pointer; padding-left: 5px;"> > User </div>
   `;
-    fetch(`${URL}/api/users`)
+    fetch(`${URL}/api/users`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
         .then(res => res.json())
         .then(data => {
             allUsers = data;
@@ -116,7 +121,11 @@ function fetchAndRenderUsers(){
   function deleteUser(id) {
     if (confirm("Are you sure you wanna delete the data?")) {
         fetch(`${URL}/api/users/${id}`, {
-            method: "DELETE"
+            method: "DELETE",
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  },
         })
         .then(() => fetchAndRenderUsers())
         .catch(err => console.error("Delete failed:", err));

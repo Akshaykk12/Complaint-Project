@@ -5,7 +5,12 @@ function fetchAndRenderComplaintsChat(){
     <div onclick="fetchAndRenderComplaintsChat()" style="cursor: pointer; padding-left: 5px;"> > Complaint Messaging </div>
     `;
     
-      fetch(`${URL}/api/complaints`)
+      fetch(`${URL}/api/complaints`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
           .then(res => res.json())
           .then(data => {
               allComplaints = data;
@@ -76,7 +81,12 @@ function fetchAndRenderComplaintsChat(){
       }
 
       function displayComplaintsChats(data){
-        fetch(`${URL}/api/users/form-data`)
+        fetch(`${URL}/api/users/form-data`,{
+  method: 'GET', // or 'POST', 'PUT', etc.
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` // key part
+  }})
     .then(res => res.json())
     .then(data => {
         departments = data.departments;
